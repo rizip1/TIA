@@ -1,7 +1,10 @@
 import path from 'path'
 import express from 'express'
-import { PUBLIC } from '../common/constants'
 import dotenv from 'dotenv'
+
+import api from './api'
+import auth from './auth'
+import { PUBLIC } from '../common/constants'
 
 dotenv.config() // initialize .env variables
 
@@ -36,6 +39,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 const indexHtmlPath = isDevelopment ? `../../${PUBLIC}/index.html` : `../../../${PUBLIC}/index.html`
 const indexPath = path.join(__dirname, indexHtmlPath)
+
+app.use('/auth', auth)
+app.use('/api', api)
 
 // need to be registered after all middlewares are set up
 // and also after every other app.get() statement
