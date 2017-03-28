@@ -1,13 +1,10 @@
 import React from 'react'
 import { render } from 'react-dom'
+import 'bootstrap/dist/css/bootstrap.css'
 import { BrowserRouter } from 'react-router-dom'
 
+import './styles.global.css'
 import App from './components/App'
-
-// React-router 4
-// Routes are just components
-// Components themselves define the composition of UI
-
 
 render(
   <BrowserRouter>
