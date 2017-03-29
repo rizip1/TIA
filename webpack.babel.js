@@ -32,7 +32,7 @@ export default function makeConfig(isDevelopment=false) {
           query: {
             // when turned on, it sometimes leads to strange errors
             cacheDirectory: false,
-            presets: ['es2015', 'react'].concat(isDevelopment ? ['react-hmre'] : []),
+            presets: ['es2015', 'react', 'stage-0'].concat(isDevelopment ? ['react-hmre'] : []),
             // add babel plugins here if required
             // plugins: ['transform-decorators-legacy'],
           },
