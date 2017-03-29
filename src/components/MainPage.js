@@ -8,6 +8,8 @@ import styles from './MainPage.scss'
 class MainPage extends Component {
 
   render() {
+    const {handleSubmitLogin, handleSubmitRegister} = this.props
+
     return (
       <div>
         <Row>
@@ -24,10 +26,10 @@ class MainPage extends Component {
           <Col md={6}>
             <Row>
               <Col md={12} className={styles.loginForm}>
-                <LoginForm />
+                <LoginForm onSubmit={handleSubmitLogin} />
               </Col>
               <Col md={12} className={styles.registrationForm}>
-                <RegistraionForm />
+                <RegistraionForm onSubmit={handleSubmitRegister} />
               </Col>
             </Row>
           </Col>
