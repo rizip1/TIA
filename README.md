@@ -1,5 +1,7 @@
-Sample starter kit for react apps.
-Currently in TODO mode.
+Install all packages
+```
+npm install
+```
 
 Copy and set environment settings
 ```
