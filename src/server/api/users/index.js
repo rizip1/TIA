@@ -7,6 +7,7 @@ import {createHash} from 'crypto'
 
 import knexConfig from '../../../knex/knexfile.js'
 import {errorTypes, errorMessages} from '../../errors'
+import trim from '../../middlewares/trim'
 import {createUser, isUniqueEmail, isUniqueLogin} from './queries.js'
 
 const router = express.Router()
@@ -19,13 +20,11 @@ const createRegistrationHash = () => {
   return createHash('sha1').update(current_date + random).digest('hex')
 }
 
-router.post('/', bodyParser.json(), async (req, res) => {
-  // trim all values here
-  // try add own middleware
+router.post('/', [bodyParser.json(), trim], async (req, res) => {
   const {login, email, password, passwordConfirm} = req.body
 
   try {
-    // Check format
+    // Check for missing data and format
     if (!email || !validator.isEmail(email)) {
       throw {type: errorTypes.badRequest, message: errorMessages.invalidEmail}
     }
@@ -40,7 +39,7 @@ router.post('/', bodyParser.json(), async (req, res) => {
       throw {type: errorTypes.badRequest, message: errorMessages.invalidPassword}
     }
 
-    // Check correctness
+    // Check passwords match and uniqueness
     if (password !== passwordConfirm) {
       throw {type: errorTypes.badRequest, message: errorMessages.passwordMatch}
     }
