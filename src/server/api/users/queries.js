@@ -1,9 +1,7 @@
 export const createUser = async (trx, userData) => {
-  return trx.transaction(async (inner_trx) => {
-    let userId = await inner_trx('users').returning('id').insert(userData)
-    userId = userId[0]
-    return inner_trx('profiles').insert({userId})
-  })
+  let userId = await trx('users').returning('id').insert(userData)
+  userId = userId[0]
+  return trx('profiles').insert({userId})
 }
 
 export const isUniqueEmail = async (trx, email) => {

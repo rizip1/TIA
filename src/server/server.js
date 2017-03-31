@@ -8,8 +8,8 @@ import auth from './auth'
 dotenv.config() // initialize .env variables
 
 const app = express()
-const port = process.env.PORT
-const host = process.env.HOST
+const port = process.env.port
+const host = process.env.host
 
 app.use('/auth', auth)
 app.use('/api', api)

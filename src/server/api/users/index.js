@@ -3,6 +3,7 @@ import bodyParser from 'body-parser'
 import validator from 'validator'
 import knexLib from 'knex'
 import bcrypt from 'bcrypt'
+import nodemailer from 'nodemailer'
 import {createHash} from 'crypto'
 
 import knexConfig from '../../../knex/knexfile.js'
@@ -14,10 +15,36 @@ const router = express.Router()
 const knex = knexLib(knexConfig)
 const saltRounds = 10
 
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.email_user,
+    pass: process.env.email_password,
+  },
+})
+
+const getConfirmMailOptions = (email, login, link) => {
+  return {
+    from: 'Hiker',
+    to: email,
+    subject: 'Hiker registrácia',
+    html : 'Ďakujeme za registráciu <strong>' + login + '</strong>!<br> \
+            Prosím kliknite na link nižšie pre dokončenie registrácie.<br>\
+            <a href='+link+'>Dokončit registráciu</a>',
+  }
+}
+
 const createRegistrationHash = () => {
   const current_date = (new Date()).valueOf().toString()
   const random = Math.random().toString()
   return createHash('sha1').update(current_date + random).digest('hex')
+}
+
+const createRegistrationUrl = (login, hash) => {
+  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
+  const host = process.env.NODE_ENV === 'production' ? process.env.host :
+    `${process.env.host}:${process.env.port}`
+  return `${protocol}://${host}/api/users?login=${login}&hash=${hash}`
 }
 
 router.post('/', [bodyParser.json(), trim], async (req, res) => {
@@ -57,8 +84,13 @@ router.post('/', [bodyParser.json(), trim], async (req, res) => {
 
     const passwordHash = await bcrypt.hash(password, saltRounds)
     const registerHash = createRegistrationHash()
-    await createUser(knex, {login, email, passwordHash, registerHash})
-    res.status(201).json({message: 'User created'})
+    const registerUrl = createRegistrationUrl(login, registerHash)
+
+    await knex.transaction(async (trx) => {
+      await createUser(trx, {login, email, passwordHash, registerHash})
+      await transporter.sendMail(getConfirmMailOptions(email, login, registerUrl))
+    })
+    res.status(201).json({message: 'Success, confirm registration email'})
   } catch (e) {
     if (e.type < 500) {
       return res.status(e.type).json({message: e.message})
@@ -68,6 +100,12 @@ router.post('/', [bodyParser.json(), trim], async (req, res) => {
     }
   }
 })
+
+router.get('/',
+  (req, res) => {
+    res.status(200).send('Registration finished')
+  }
+)
 
 router.put('/',
   (req, res) => {
