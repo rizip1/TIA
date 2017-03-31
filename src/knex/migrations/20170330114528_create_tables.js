@@ -26,8 +26,8 @@ exports.up = async (knex) =>  {
     table.string('email').unique()
     table.string('passwordHash').notNullable()
     table.string('registerHash').notNullable()
-    table.timestamp('createdAt').defaultTo(knex.fn.now()).notNullable()
-    table.timestamp('updatedAt').defaultTo(knex.fn.now()).notNullable()
+    table.timestamp('createdAt')
+    table.timestamp('updatedAt')
     table.timestamp('deletedAt')
   })
 
