@@ -55,11 +55,10 @@ router.post('/', [bodyParser.json(), trim], async (req, res) => {
       throw {type: errorTypes.resourceExists, message: errorMessages.existsLogin}
     }
 
-    bcrypt.hash(password, saltRounds).then(async (passwordHash) => {
-      const registerHash = createRegistrationHash()
-      await createUser(knex, {login, email, passwordHash, registerHash})
-      res.status(201).json({message: 'User created'})
-    })
+    const passwordHash = await bcrypt.hash(password, saltRounds)
+    const registerHash = createRegistrationHash()
+    await createUser(knex, {login, email, passwordHash, registerHash})
+    res.status(201).json({message: 'User created'})
   } catch (e) {
     if (e.type < 500) {
       return res.status(e.type).json({message: e.message})
