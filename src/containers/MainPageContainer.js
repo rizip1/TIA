@@ -14,8 +14,25 @@ class MainPageContainer extends Component {
     }
   }
 
-  handleSubmitLogin = () => {
+  handleSubmitLogin = (values) => {
+    console.log('values', values)
+
+    const options = {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...values,
+      }),
+    }
+
     this.props.dispatch(reset('login'))
+
+    fetch('/auth/login', options)
+      .then((res) => console.log('success', res))
+      .catch((e) => console.error(e))
   }
 
   handleSubmitRegister = () => {

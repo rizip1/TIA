@@ -106,20 +106,33 @@ router.post('/', [bodyParser.json(), trim], async (req, res) => {
 
 // confirm registration using registerHash
 router.get('/', async (req, res) => {
-  if (!req.query.hash || !req.query.login) {
-    throw {type: errorTypes.badRequest, message: ''}
-  }
-  const {login, hash} = req.query
-  const mainPage = createDashboardUrl()
+  try {
+    if (!req.query.hash || !req.query.login) {
+      throw {type: errorTypes.badRequest, message: ''}
+    }
+    const {login, hash} = req.query
+    const mainPage = createDashboardUrl()
 
-  const user = await isRegisterHashCorrect(knex, login, hash)
-  if (!user.length) {
-    throw {type: errorTypes.badRequest, message: ''}
-  }
-  const id = user[0].id
+    const user = await isRegisterHashCorrect(knex, login, hash)
+    if (!user.length) {
+      throw {type: errorTypes.badRequest, message: ''}
+    }
+    const id = user[0].id
+    const email = user[0].email
 
-  await confirmRegistration(knex, id)
-  res.redirect(mainPage)
+    await confirmRegistration(knex, id)
+
+    const sess = req.session
+    sess.email = email
+    res.redirect(mainPage)
+  } catch (e) {
+    if (e.type < 500) {
+      return res.status(e.type).json({message: e.message})
+    } else {
+      console.error('Error confirming user', e)
+      return res.status(500).json({message: 'Server error'})
+    }
+  }
 })
 
 router.put('/',

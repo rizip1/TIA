@@ -1,5 +1,6 @@
 export const errorTypes = {
   badRequest: 400,
+  forbidden: 403,
   resourceExists: 409,
 }
 
@@ -10,4 +11,5 @@ export const errorMessages = {
   passwordMatch: 'Passwords do not match',
   existsEmail: 'Email exists',
   existsLogin: 'Login exists',
+  badCreds: 'Bad credentials',
 }
