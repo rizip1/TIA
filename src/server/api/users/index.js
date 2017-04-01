@@ -9,7 +9,9 @@ import {createHash} from 'crypto'
 import knexConfig from '../../../knex/knexfile.js'
 import {errorTypes, errorMessages} from '../../errors'
 import trim from '../../middlewares/trim'
-import {createUser, isUniqueEmail, isUniqueLogin} from './queries.js'
+import {createUser, isUniqueEmail, isUniqueLogin,
+  isRegisterHashCorrect, confirmRegistration} from './queries.js'
+import {protocol, host} from '../../utils.js'
 
 const router = express.Router()
 const knex = knexLib(knexConfig)
@@ -41,10 +43,11 @@ const createRegistrationHash = () => {
 }
 
 const createRegistrationUrl = (login, hash) => {
-  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
-  const host = process.env.NODE_ENV === 'production' ? process.env.host :
-    `${process.env.host}:${process.env.port}`
   return `${protocol}://${host}/api/users?login=${login}&hash=${hash}`
+}
+
+const createDashboardUrl = () => {
+  return `${protocol}://${host}/dashboard`
 }
 
 router.post('/', [bodyParser.json(), trim], async (req, res) => {
@@ -101,11 +104,23 @@ router.post('/', [bodyParser.json(), trim], async (req, res) => {
   }
 })
 
-router.get('/',
-  (req, res) => {
-    res.status(200).send('Registration finished')
+// confirm registration using registerHash
+router.get('/', async (req, res) => {
+  if (!req.query.hash || !req.query.login) {
+    throw {type: errorTypes.badRequest, message: ''}
   }
-)
+  const {login, hash} = req.query
+  const mainPage = createDashboardUrl()
+
+  const user = await isRegisterHashCorrect(knex, login, hash)
+  if (!user.length) {
+    throw {type: errorTypes.badRequest, message: ''}
+  }
+  const id = user[0].id
+
+  await confirmRegistration(knex, id)
+  res.redirect(mainPage)
+})
 
 router.put('/',
   (req, res) => {

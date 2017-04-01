@@ -17,3 +17,17 @@ export const isUniqueLogin = async (trx, login) => {
     .whereNull('deletedAt')
   return !result.length
 }
+
+export const isRegisterHashCorrect = (trx, login, hash) => {
+  return trx('users')
+    .where('login', login)
+    .where('registerHash', hash)
+    .whereNull('createdAt')
+    .select('*')
+}
+
+export const confirmRegistration = (trx, id) => {
+  return trx('users')
+    .update('createdAt', trx.fn.now())
+    .where('id', id)
+}
