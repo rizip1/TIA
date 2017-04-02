@@ -45,6 +45,7 @@ class LoginForm extends Component {
           type="text"
           placeholder="Email"
           showErrors={false}
+          ignoreLabel
           component={renderField}
         />
         {' '}
@@ -53,6 +54,7 @@ class LoginForm extends Component {
           type="password"
           placeholder="Heslo"
           showErrors={false}
+          ignoreLabel
           component={renderField}
         />
         {' '}

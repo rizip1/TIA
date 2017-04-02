@@ -1,8 +1,8 @@
 import React from 'react'
-import {FormGroup, FormControl, HelpBlock} from 'react-bootstrap'
+import {FormGroup, FormControl, HelpBlock, ControlLabel} from 'react-bootstrap'
 
 export const renderField = ({input, placeholder, type, showErrors = true,
-  meta: {touched, error}}) => {
+  ignoreLabel = false, meta: {touched, error}}) => {
   const getValidationState = () => {
     if (!showErrors) {
       return null
@@ -18,6 +18,7 @@ export const renderField = ({input, placeholder, type, showErrors = true,
   return (
     <FormGroup validationState={getValidationState()}>
       {' '}
+      {!ignoreLabel && <ControlLabel>{placeholder}</ControlLabel>}
       <FormControl {...input}
         placeholder={placeholder}
         type={type}

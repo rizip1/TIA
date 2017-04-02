@@ -12,3 +12,7 @@ body {
 .has-error > .help-block {
   color: #990000 !important;
 }
+
+.form-group .control-label {
+  color: #333 !important;
+}
