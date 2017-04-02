@@ -14,6 +14,8 @@ const host = process.env.host
 
 const sessionOptions = {
   secret: '9awef98fefa68fWAFffeaFea656862eFAEAF95nyp',
+  resave: false,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true,
     path: '/',
