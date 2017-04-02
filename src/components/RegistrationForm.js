@@ -1,42 +1,64 @@
 import React, { Component } from 'react'
-import {FormGroup, Button, FormControl} from 'react-bootstrap'
+import validator from 'validator'
+import {FormGroup, Button, FormControl, HelpBlock} from 'react-bootstrap'
 
 import { reduxForm, Field } from 'redux-form'
 
-const renderField = (field) => {
+const renderField = ({input, placeholder, type, meta: {touched, error}}) => {
+  const getValidationState = () => {
+    if (touched && error) {
+      return 'error'
+    } else if (touched) {
+      return 'success'
+    } else {
+      return null
+    }
+  }
   return (
-    <FormGroup>
+    <FormGroup validationState={getValidationState()}>
       {' '}
-      <FormControl {...field.input}
-        placeholder={field.placeholder}
-        type={field.type}
+      <FormControl {...input}
+        placeholder={placeholder}
+        type={type}
+        maxLength={40}
       />
+      <FormControl.Feedback />
+      {(touched && error) && <HelpBlock>{error}</HelpBlock>}
     </FormGroup>
   )
 }
 
 function validate(formProps) {
-  const errors = {};
+  const errors = {}
+  const empty = 'Pole nesmie byť prázdne'
 
-  const {login, email, password, passwordConfirm} = formProps
+  const trimmedProps = {}
+  Object.keys(formProps).forEach((key) => {
+    trimmedProps[key] = formProps[key] ? formProps[key].trim() : null
+  })
+  const {login, email, password, passwordConfirm} = trimmedProps
 
-  if (!login|| !login.trim().length) {
-    errors.login = 'a'
+  if (!login) {
+    errors.login = empty
   }
 
-  if (!email || !email.trim().length) {
-    errors.email = 'a'
+  if (!email) {
+    errors.email = empty
+  } else if (!validator.isEmail(email)) {
+    errors.email = 'Neplatný email'
   }
 
-  if (!password || !password.trim().length) {
-    errors.password = 'a'
+  if (!password) {
+    errors.password = empty
+  } else if (!validator.isLength(password, {min:6})) {
+    errors.password = 'Heslo musí obsahovať aspoň 6 znakov'
   }
 
-  if (!passwordConfirm || !passwordConfirm.trim().length) {
-    errors.passwordConfirm = 'a'
+  if (password && passwordConfirm && password !== passwordConfirm) {
+    errors.passwordConfirm = 'Heslá sa nezhodujú'
   }
 
-  return errors;
+  return errors
 }
 
 class RegistrationForm extends Component {
