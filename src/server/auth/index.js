@@ -45,8 +45,7 @@ router.post('/login', [bodyParser.json(), trim], async (req, res) => {
 
 router.get('/logout',
   (req, res) => {
-    const sess = req.session
-    delete sess.email
+    req.session.destroy()
     res.status(200).send({message: 'Logout'})
   }
 )

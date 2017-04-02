@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import auth from './hoc/auth'
 
 class Dashboard extends Component {
 
@@ -9,4 +10,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard
+export default auth(Dashboard)
