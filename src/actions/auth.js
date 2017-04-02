@@ -12,11 +12,10 @@ export const CHECK_LOGIN_ERROR = 'CHECK_LOGIN_ERROR'
 export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
 export const LOGOUT_ERROR = 'LOGOUT_ERROR'
 
-const requestLogin = (email, password) => {
+const requestLogin = (values) => {
   return {
     type: LOGIN_REQUEST,
-    email,
-    password,
+    values,
   }
 }
 
@@ -33,9 +32,9 @@ const errorLogin = (error) => {
   }
 }
 
-export const login = (email, password) => {
+export const login = (values) => {
   return dispatch => {
-    dispatch(requestLogin(email, password))
+    dispatch(requestLogin(values))
 
     const options = {
       method: 'post',
@@ -44,8 +43,7 @@ export const login = (email, password) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email,
-        password,
+        ...values,
       }),
     }
 

@@ -21,7 +21,7 @@ class MainPageContainer extends Component {
   handleSubmitLogin = (values) => {
     // need to return promise because of redux-form
     this.props.dispatch(reset('login'))
-    return this.props.login(values.email, values.password)
+    return this.props.login(values)
       .catch((err) => {
         const errorObj = {}
         if (!err.status || err.status >= 500) {

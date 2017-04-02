@@ -9,8 +9,7 @@ function authReducer(state = {
   login: {
     isFetching: false,
     error: null,
-    email: null,
-    password: null,
+    values: null,
   },
   logout: {
     error: null,
@@ -30,8 +29,7 @@ function authReducer(state = {
         ...state.login,
         isFetching: true,
         email: action.email,
-        password: action.password,
-        error: null,
+        values: action.values,
       },
       isAuthenticated: false,
     }
@@ -41,8 +39,7 @@ function authReducer(state = {
       login: {
         ...state.login,
         isFetching: false,
-        email: null,
-        password: null,
+        values: null,
       },
       isAuthenticated: true,
     }
@@ -52,8 +49,7 @@ function authReducer(state = {
       login: {
         ...state.login,
         isFetching: false,
-        email: null,
-        password: null,
+        values: null,
         error: action.error,
       },
     }
