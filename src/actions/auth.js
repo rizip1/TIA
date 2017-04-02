@@ -54,6 +54,7 @@ export const login = (email, password) => {
       .then(({response, data}) => {
         if (!response.ok) {
           dispatch(errorLogin(data.message))
+          return Promise.reject({status: response.status})
         } else {
           dispatch(successLogin())
         }
@@ -172,6 +173,7 @@ export const register = (values) => {
       .then(({response, data}) => {
         if (!response.ok) {
           dispatch(errorRegister(data.message))
+          return Promise.reject(data)
         } else {
           dispatch(successRegister())
         }

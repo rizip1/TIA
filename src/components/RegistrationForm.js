@@ -1,32 +1,10 @@
 import React, { Component } from 'react'
 import validator from 'validator'
-import {FormGroup, Button, FormControl, HelpBlock} from 'react-bootstrap'
+import {Button} from 'react-bootstrap'
+import {reduxForm, Field} from 'redux-form'
 
-import { reduxForm, Field } from 'redux-form'
-
-const renderField = ({input, placeholder, type, meta: {touched, error}}) => {
-  const getValidationState = () => {
-    if (touched && error) {
-      return 'error'
-    } else if (touched) {
-      return 'success'
-    } else {
-      return null
-    }
-  }
-  return (
-    <FormGroup validationState={getValidationState()}>
-      {' '}
-      <FormControl {...input}
-        placeholder={placeholder}
-        type={type}
-        maxLength={40}
-      />
-      <FormControl.Feedback />
-      {(touched && error) && <HelpBlock>{error}</HelpBlock>}
-    </FormGroup>
-  )
-}
+import FormSubmitFeedback from './visual/FormSubmitFeedback'
+import {renderField} from './helpers'
 
 function validate(formProps) {
   const errors = {}
@@ -70,17 +48,17 @@ class RegistrationForm extends Component {
       'password': '',
       'passwordConfirm': '',
     }
-
     this.props.initialize(initData);
   }
 
   render() {
-    const {invalid, submitting, handleSubmit} = this.props
+    const {invalid, submitting, handleSubmit, submitSucceeded,
+      submitFailed, error} = this.props
 
     return (
       <div>
-        <p>Ešte nemáš účet? Tak neváhaj a registruj sa.</p>
-        <form>
+        <p>Ešte nemáš účet? Tak neváhaj a <strong>registruj sa.</strong></p>
+        <form onSubmit={handleSubmit}>
           <Field
             name="login"
             type="text"
@@ -105,10 +83,28 @@ class RegistrationForm extends Component {
             placeholder="Potvrdenie hesla"
             component={renderField}
           />
-          <Button type="submit" onClick={handleSubmit} disabled={submitting || invalid}>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={submitting || invalid}>
             Registrovať
           </Button>
         </form>
+        {submitSucceeded &&
+          <FormSubmitFeedback>
+            <strong>Ďakujeme za registráciu</strong>. Pre
+             dokončenie registrácie prosím <strong>kliknite
+             na link v potvrdzovacom emaily</strong>, ktorý sme zaslali na Vami
+             zadanú emailovú adresu.</FormSubmitFeedback>
+        }
+        {(submitFailed && error) &&
+          <FormSubmitFeedback>Pri registrácií sa vyskytla chyba. Prosím skontrolujte
+            pripojenie k internetu a prípadne kontaktujte technickú podporu.
+          </FormSubmitFeedback>
+        }
+        {submitting &&
+          <FormSubmitFeedback>Prebieha registrácia prosím počkajte.</FormSubmitFeedback>
+        }
       </div>
     )
   }

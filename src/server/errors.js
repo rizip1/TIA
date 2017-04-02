@@ -13,3 +13,16 @@ export const errorMessages = {
   existsLogin: 'Login exists',
   badCreds: 'Bad credentials',
 }
+
+// fields that can no be validated client side
+// without usage of online validation
+export const conflictFields = {
+  email: {
+    key: 'email',
+    translate: 'Email už existuje',
+  },
+  login: {
+    key: 'login',
+    translate: 'Login už existuje',
+  },
+}

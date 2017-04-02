@@ -17,7 +17,7 @@ class MainPage extends Component {
             <Jumbotron className={styles.jumbo}>
               <h1>Hiker</h1>
               <p>Rád chodíš na hory no nemáš s kým?</p>
-              <p>Je tažké zladiť turistiku medzi viacerými ludmi?</p>
+              <p>Je tažké zladiť turistiku medzi viacerými ľuďmi?</p>
               <p><strong>Hiker</strong> ti pomôže nájsť ľudí s podobnými cieľmi ako ty,
               či zladiť túru do posledného detailu.
               </p>

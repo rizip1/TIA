@@ -7,7 +7,7 @@ import nodemailer from 'nodemailer'
 import {createHash} from 'crypto'
 
 import knexConfig from '../../../knex/knexfile.js'
-import {errorTypes, errorMessages} from '../../errors'
+import {errorTypes, errorMessages, conflictFields} from '../../errors'
 import trim from '../../middlewares/trim'
 import {createUser, isUniqueEmail, isUniqueLogin,
   isRegisterHashCorrect, confirmRegistration} from './queries.js'
@@ -78,11 +78,13 @@ router.post('/', [bodyParser.json(), trim], async (req, res) => {
     const isLoginUnique = await isUniqueLogin(knex, login)
 
     if (!isEmailUnique) {
-      throw {type: errorTypes.resourceExists, message: errorMessages.existsEmail}
+      throw {type: errorTypes.resourceExists, message: errorMessages.existsEmail,
+        field: conflictFields.email.key, translate: conflictFields.email.translate}
     }
 
     if (!isLoginUnique) {
-      throw {type: errorTypes.resourceExists, message: errorMessages.existsLogin}
+      throw {type: errorTypes.resourceExists, message: errorMessages.existsLogin,
+        field: conflictFields.login.key, translate: conflictFields.login.translate}
     }
 
     const passwordHash = await bcrypt.hash(password, saltRounds)
@@ -96,7 +98,12 @@ router.post('/', [bodyParser.json(), trim], async (req, res) => {
     res.status(201).json({message: 'Success, confirm registration email'})
   } catch (e) {
     if (e.type < 500) {
-      return res.status(e.type).json({message: e.message})
+      const errorObj = {message: e.message}
+      if (e.field) {
+        errorObj.field = e.field,
+        errorObj.translate = e.translate
+      }
+      return res.status(e.type).json(errorObj)
     } else {
       console.error('Error creating user', e)
       return res.status(500).json({message: 'Server error'})

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import {reset} from 'redux-form'
+import {reset, SubmissionError} from 'redux-form'
 import {withRouter} from 'react-router-dom'
 
 import {login, register} from '../actions/auth'
@@ -19,15 +19,33 @@ class MainPageContainer extends Component {
   }
 
   handleSubmitLogin = (values) => {
+    // need to return promise because of redux-form
     this.props.dispatch(reset('login'))
-    this.props.login(values.email, values.password)
+    return this.props.login(values.email, values.password)
+      .catch((err) => {
+        const errorObj = {}
+        if (!err.status || err.status >= 500) {
+          errorObj._error = true
+        }
+        throw new SubmissionError(errorObj)
+      })
   }
 
   handleSubmitRegister = (values) => {
-    this.props.dispatch(reset('registration'))
-    this.props.register(values)
-      .then(() => console.log('register ok'))
-      .catch((err) => console.error('register error', err))
+    // need to return promise because of redux-form
+    return this.props.register(values)
+      .then(() => {
+        this.props.dispatch(reset('registration'))
+      })
+      .catch((err) => {
+        const errorObj = {}
+        if (err.field) {
+          errorObj[err.field] = err.translate
+        } else {
+          errorObj._error = true
+        }
+        throw new SubmissionError(errorObj)
+      })
   }
 
   render() {

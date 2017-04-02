@@ -1,29 +1,21 @@
 import React, { Component } from 'react'
-import {Form, FormGroup, Button, FormControl} from 'react-bootstrap'
-import { reduxForm, Field } from 'redux-form'
+import {Form, Button} from 'react-bootstrap'
+import {reduxForm, Field} from 'redux-form'
 
-const renderField = (field) => {
-  return (
-    <FormGroup>
-      <FormControl {...field.input}
-        placeholder={field.placeholder}
-        type={field.type}
-      />
-    </FormGroup>
-  )
-}
+import {renderField} from './helpers'
+import FormSubmitFeedback from './visual/FormSubmitFeedback'
 
 function validate(formProps) {
-  const errors = {};
+  const errors = {}
 
   const {email, password} = formProps
 
   if (!email || !email.trim().length) {
-    errors.email = 'a'
+    errors.email = true
   }
 
   if (!password || !password.trim().length) {
-    errors.password = 'a'
+    errors.password = true
   }
 
   return errors
@@ -41,16 +33,18 @@ class LoginForm extends Component {
   }
 
   render() {
-    const {invalid, submitting, handleSubmit} = this.props
+    const {invalid, submitting, handleSubmit,
+      submitFailed, error} = this.props
 
     return (
       <div>
-        <p>Prihlásenie</p>
+        <p><strong>Prihlásenie</strong></p>
       <Form inline onSubmit={handleSubmit}>
         <Field
           name="email"
           type="text"
           placeholder="Email"
+          showErrors={false}
           component={renderField}
         />
         {' '}
@@ -58,6 +52,7 @@ class LoginForm extends Component {
           name="password"
           type="password"
           placeholder="Heslo"
+          showErrors={false}
           component={renderField}
         />
         {' '}
@@ -65,6 +60,17 @@ class LoginForm extends Component {
           Prihlásiť
         </Button>
       </Form>
+        {(submitFailed && !error) &&
+          <FormSubmitFeedback type="error">
+            Nesprávne prihlasovacie údaje
+          </FormSubmitFeedback>
+        }
+        {(submitFailed && error) &&
+          <FormSubmitFeedback type="error">
+            Pri prihlásení sa vyskytla chyba. Prosím skontrolujte
+            pripojenie k internetu a prípadne kontaktujte technickú podporu.
+          </FormSubmitFeedback>
+        }
       </div>
     )
   }
