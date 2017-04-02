@@ -1,17 +1,24 @@
-import {LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_ERROR,
-  CHECK_LOGIN_SUCCESS, CHECK_LOGIN_ERROR, LOGOUT_SUCCESS,
-  LOGOUT_ERROR,
+import {
+  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_ERROR,
+  CHECK_LOGIN_SUCCESS, CHECK_LOGIN_ERROR,
+  LOGOUT_SUCCESS, LOGOUT_ERROR,
+  REGISTER_REQUEST, REGISTER_SUCCESS, REGISTER_ERROR,
 } from '../actions/auth'
 
 function authReducer(state = {
   login: {
     isFetching: false,
-    error: false,
+    error: null,
     email: null,
     password: null,
   },
   logout: {
     error: null,
+  },
+  register: {
+    isFetching: false,
+    error: null,
+    values: null,
   },
   isAuthenticated: false,
 }, action) {
@@ -77,8 +84,37 @@ function authReducer(state = {
         error: action.error,
       },
     }
+  case REGISTER_REQUEST:
+    return {
+      ...state,
+      register: {
+        ...state.register,
+        isFetching: true,
+        error: null,
+        values: action.values,
+      },
+    }
+  case REGISTER_SUCCESS:
+    return {
+      ...state,
+      register: {
+        ...state.register,
+        isFetching: false,
+        values: null,
+      },
+    }
+  case REGISTER_ERROR:
+    return {
+      ...state,
+      register: {
+        ...state.register,
+        isFetching: false,
+        values: null,
+        error: action.error,
+      },
+    }
   default:
-    return state;
+    return state
   }
 }
 

@@ -1,3 +1,7 @@
+export const REGISTER_REQUEST = 'REGISTER_REQUEST'
+export const REGISTER_SUCCESS = 'REGISTER_SUCCESS'
+export const REGISTER_ERROR = 'REGISTER_ERROR'
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST'
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
 export const LOGIN_ERROR = 'LOGIN_ERROR'
@@ -44,10 +48,6 @@ export const login = (email, password) => {
         password,
       }),
     }
-
-    fetch('/auth/login', options)
-      .then((res) => console.log('success', res))
-      .catch((e) => console.error(e))
 
     return fetch('/auth/login', options)
       .then((response) => response.json().then((data) => ({response, data})))
@@ -127,6 +127,57 @@ export const logout = () => {
       })
       .catch((err) => {
         dispatch(errorLogout(err))
+        return Promise.reject(err)
+      })
+  }
+}
+
+const requestRegister = (values) => {
+  return {
+    type: REGISTER_REQUEST,
+    values,
+  }
+}
+
+const successRegister = () => {
+  return {
+    type: REGISTER_SUCCESS,
+  }
+}
+
+const errorRegister = (error) => {
+  return {
+    type: REGISTER_ERROR,
+    error,
+  }
+}
+
+export const register = (values) => {
+  return dispatch => {
+    dispatch(requestRegister(values))
+
+    const options = {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...values,
+      }),
+    }
+
+    return fetch('/api/users', options)
+      .then((response) => response.json().then((data) => ({response, data})))
+      .then(({response, data}) => {
+        if (!response.ok) {
+          dispatch(errorRegister(data.message))
+        } else {
+          dispatch(successRegister())
+        }
+      })
+      .catch((err) => {
+        dispatch(errorRegister(err))
         return Promise.reject(err)
       })
   }

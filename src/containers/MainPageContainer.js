@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux'
 import {reset} from 'redux-form'
 import {withRouter} from 'react-router-dom'
 
-import {login} from '../actions/auth'
+import {login, register} from '../actions/auth'
 import MainPage from '../components/MainPage'
 
 
@@ -23,8 +23,11 @@ class MainPageContainer extends Component {
     this.props.login(values.email, values.password)
   }
 
-  handleSubmitRegister = () => {
+  handleSubmitRegister = (values) => {
     this.props.dispatch(reset('registration'))
+    this.props.register(values)
+      .then(() => console.log('register ok'))
+      .catch((err) => console.error('register error', err))
   }
 
   render() {
@@ -47,6 +50,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     login,
+    register,
     dispatch,
   }, dispatch)
 }
