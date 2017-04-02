@@ -7,7 +7,7 @@ import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 
 import './styles.global.css'
-import App from './components/App'
+import AppContainer from './containers/AppContainer'
 import reducers from './reducers'
 
 function configureStore() {
@@ -23,7 +23,7 @@ let store = configureStore()
 render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <AppContainer />
     </BrowserRouter>
   </Provider>
   , document.getElementById('main')

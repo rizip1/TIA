@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt'
 import knexLib from 'knex'
 
 import trim from '../middlewares/trim'
+import auth from '../middlewares/auth'
 import {errorTypes, errorMessages} from '../errors'
 import {getPasswordHash} from './queries'
 import knexConfig from '../../knex/knexfile.js'
@@ -44,8 +45,14 @@ router.post('/login', [bodyParser.json(), trim], async (req, res) => {
 
 router.get('/logout',
   (req, res) => {
-    res.status(200).send('Logout')
+    const sess = req.session
+    delete sess.email
+    res.status(200).send({message: 'Logout'})
   }
 )
+
+router.get('/checkLogin', auth, (req, res) => {
+  res.status(200).json({message: 'OK'})
+})
 
 export default router

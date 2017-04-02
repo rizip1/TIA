@@ -2,37 +2,25 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {reset} from 'redux-form'
+import {withRouter} from 'react-router-dom'
 
+import {login} from '../actions/auth'
 import MainPage from '../components/MainPage'
 
 
 class MainPageContainer extends Component {
 
-  componentWillMount() {
-    if (this.props.isAuthenticated) {
-      this.props.history.replace('/dashboard')
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.isAuthenticated) {
+      return (
+        nextProps.history.replace('/dashboard')
+      )
     }
   }
 
   handleSubmitLogin = (values) => {
-    console.log('values', values)
-
-    const options = {
-      method: 'post',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ...values,
-      }),
-    }
-
     this.props.dispatch(reset('login'))
-
-    fetch('/auth/login', options)
-      .then((res) => console.log('success', res))
-      .catch((e) => console.error(e))
+    this.props.login(values.email, values.password)
   }
 
   handleSubmitRegister = () => {
@@ -42,10 +30,11 @@ class MainPageContainer extends Component {
   render() {
     return (
       <MainPage
+        {...this.props}
         handleSubmitLogin={this.handleSubmitLogin}
         handleSubmitRegister={this.handleSubmitRegister}
       />
-    );
+    )
   }
 }
 
@@ -57,8 +46,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
+    login,
     dispatch,
   }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainPageContainer)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainPageContainer))
