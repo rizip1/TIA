@@ -6,6 +6,9 @@ import frontend from './frontend'
 import api from './api'
 import auth from './auth'
 
+// only for development
+// for production set environment variables on heroku
+// or directly in `npm start` call
 dotenv.config() // initialize .env variables
 
 const app = express()

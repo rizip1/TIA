@@ -1,14 +1,12 @@
 import express from 'express'
 import path from 'path'
 
-import { PUBLIC } from '../common/constants'
+import {PUBLIC} from '../common/constants'
 
 const app = express()
 export default app
 
-const isDevelopment = (process.env.NODE_ENV !== 'production')
-
-const publicDirPath = isDevelopment ? `../../${PUBLIC}/` : `../../../${PUBLIC}/`
+const publicDirPath = `../../${PUBLIC}/`
 const publicPath = express.static(path.join(__dirname, publicDirPath))
 
 // set access name for public directory
@@ -31,7 +29,7 @@ if (process.env.NODE_ENV !== 'production') {
   }))
 }
 
-const indexHtmlPath = isDevelopment ? `../../${PUBLIC}/index.html` : `../../../${PUBLIC}/index.html`
+const indexHtmlPath = `../../${PUBLIC}/index.html`
 const indexPath = path.join(__dirname, indexHtmlPath)
 
 // need to be registered after all middlewares are set up

@@ -96,10 +96,6 @@ export default function makeConfig(isDevelopment=false) {
           'process.env': {
             NODE_ENV: JSON.stringify(isDevelopment ? 'development' : 'production'),
           },
-          'api': {
-            HOST: JSON.stringify(isDevelopment ?
-              process.env.API_HOST_DEV : process.env.API_HOST_PROD),
-          },
         }),
       ]
       if (isDevelopment) {
