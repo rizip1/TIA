@@ -7,6 +7,7 @@ import MainPageContainer from '../containers/MainPageContainer'
 import PageNotFound from './PageNotFound'
 import NavigationContainer from '../containers/NavigationContainer'
 import LogoutContainer from '../containers/LogoutContainer'
+import NewInterestForm from './NewInterestForm'
 
 class App extends Component {
   render() {
@@ -19,6 +20,7 @@ class App extends Component {
               <Route exact path="/" component={MainPageContainer}/>
               <Route exact path="/logout" component={LogoutContainer}/>
               <Route path="/dashboard" component={Dashboard}/>
+              <Route path="/new-interest" component={NewInterestForm}/>
               <Route component={PageNotFound}/>
             </Switch>
           </Grid>
