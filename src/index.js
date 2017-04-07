@@ -6,6 +6,7 @@ import {createStore, applyMiddleware, compose} from 'redux'
 import {Provider} from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 
+import 'react-datetime/css/react-datetime.css'
 import './styles.global.css'
 import AppContainer from './containers/AppContainer'
 import reducers from './reducers'

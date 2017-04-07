@@ -48,6 +48,7 @@ exports.up = async (knex) =>  {
       .onUpdate('restrict').onDelete('restrict')
     table.specificType('minDifficulty', skillsType)
     table.specificType('maxDifficulty', skillsType)
+    table.text('description')
     table.timestamp('validTo').notNullable()
     table.timestamp('createdAt').defaultTo(knex.fn.now()).notNullable()
     table.timestamp('deletedAt')

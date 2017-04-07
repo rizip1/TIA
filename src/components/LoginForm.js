@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import {Form, Button} from 'react-bootstrap'
 import {reduxForm, Field} from 'redux-form'
 
-import {renderField} from './helpers'
 import FormSubmitFeedback from './visual/FormSubmitFeedback'
+import CustomField from './visual/CustomField'
 
 function validate(formProps) {
   const errors = {}
@@ -46,7 +46,7 @@ class LoginForm extends Component {
           placeholder="Email"
           showErrors={false}
           ignoreLabel
-          component={renderField}
+          component={CustomField}
         />
         {' '}
         <Field
@@ -55,7 +55,7 @@ class LoginForm extends Component {
           placeholder="Heslo"
           showErrors={false}
           ignoreLabel
-          component={renderField}
+          component={CustomField}
         />
         {' '}
         <Button type="submit" onClick={handleSubmit} disabled={submitting || invalid}>
