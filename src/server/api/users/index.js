@@ -131,6 +131,7 @@ router.get('/', async (req, res) => {
 
     const sess = req.session
     sess.email = email
+    sess.userId = id
     res.redirect(mainPage)
   } catch (e) {
     if (e.type < 500) {

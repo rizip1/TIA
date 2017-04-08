@@ -1,3 +1,5 @@
+import {enumToNamesArray} from './utils'
+
 export const difficultyLevels = [
   {
     'name': '1',
@@ -51,3 +53,6 @@ export const locations = [
     'label': 'Nízke Tatry',
   },
 ]
+
+export const difficultyLevelsNames = enumToNamesArray(difficultyLevels)
+export const locationsNames = enumToNamesArray(locations)

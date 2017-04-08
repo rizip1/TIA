@@ -58,6 +58,24 @@ class NewInterestForm extends Component {
 
   handleSubmit = (values) => {
     console.log('values', values)
+
+    const options = {
+      method: 'post',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...values,
+      }),
+    }
+
+    fetch('/api/interests', options)
+      .then((response) => response.json().then((data) => ({response, data})))
+      .then(({response, data}) => {
+        console.log('msq', data.message)
+      })
+      .catch((err) => console.log('err', err))
   }
 
   getInitValidTo = () => {

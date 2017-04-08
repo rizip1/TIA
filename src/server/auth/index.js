@@ -6,7 +6,7 @@ import knexLib from 'knex'
 import trim from '../middlewares/trim'
 import auth from '../middlewares/auth'
 import {errorTypes, errorMessages} from '../errors'
-import {getPasswordHash} from './queries'
+import {getPasswordHash, getUserId} from './queries'
 import knexConfig from '../../knex/knexfile.js'
 
 const knex = knexLib(knexConfig)
@@ -29,8 +29,12 @@ router.post('/login', [bodyParser.json(), trim], async (req, res) => {
     if (!match) {
       throw {type: errorTypes.forbidden, message: errorMessages.badCreds}
     }
+
+    const queryRes = await getUserId(knex, email)
+
     const sess = req.session
     sess.email = email
+    sess.userId = queryRes.id
 
     res.status(200).json({message: 'OK'})
   } catch (e) {
