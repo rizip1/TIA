@@ -4,8 +4,9 @@ import {connect} from 'react-redux'
 
 function auth(WrappedComponent) {
   const authComponent = class extends React.Component {
-    componentWillMount() {
-      if (!this.props.isAuthenticated) {
+    componentWillReceiveProps(nextProps) {
+      const {isAuthenticated, checkedLogin} = nextProps
+      if (!isAuthenticated && checkedLogin) {
         this.props.history.replace('/')
       }
     }
@@ -20,6 +21,7 @@ function auth(WrappedComponent) {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
+    checkedLogin: state.auth.checkedLogin,
   }
 }
 

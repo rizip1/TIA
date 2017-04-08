@@ -4,7 +4,7 @@ import {FormGroup, ControlLabel, Checkbox, FormControl, Label,
 import DateTime from 'react-datetime'
 import moment from 'moment'
 
-import {dateFormat} from '../helpers'
+import {dateFormat} from '../../common/utils'
 
 
 export default class CustomField extends Component {

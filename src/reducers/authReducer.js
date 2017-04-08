@@ -19,6 +19,7 @@ function authReducer(state = {
     error: null,
     values: null,
   },
+  checkedLogin: false,
   isAuthenticated: false,
 }, action) {
   switch (action.type) {
@@ -28,7 +29,6 @@ function authReducer(state = {
       login: {
         ...state.login,
         isFetching: true,
-        email: action.email,
         values: action.values,
       },
       isAuthenticated: false,
@@ -50,18 +50,19 @@ function authReducer(state = {
         ...state.login,
         isFetching: false,
         values: null,
-        error: action.error,
       },
     }
   case CHECK_LOGIN_SUCCESS:
     return {
       ...state,
       isAuthenticated: true,
+      checkedLogin: true,
     }
   case CHECK_LOGIN_ERROR:
     return {
       ...state,
       isAuthenticated: false,
+      checkedLogin: true,
     }
   case LOGOUT_SUCCESS:
     return {
