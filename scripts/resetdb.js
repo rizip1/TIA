@@ -1,4 +1,4 @@
-import config from '../src/knex/knexfile.js'
+import config from '../src/backend/knex/knexfile.js'
 
 const conn = config.connection
 conn.database = 'postgres'

@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt'
 import nodemailer from 'nodemailer'
 import {createHash} from 'crypto'
 
-import knexConfig from '../../../knex/knexfile.js'
+import knexConfig from '../../knex/knexfile.js'
 import {errorTypes, errorMessages, conflictFields} from '../../errors'
 import trim from '../../middlewares/trim'
 import {createUser, isUniqueEmail, isUniqueLogin,

@@ -1,5 +1,5 @@
-import {locations} from '../../common/enums'
-import {addLocations} from '../../server/queries'
+import {locations} from '../../../common/enums'
+import {addLocations} from '../../queries'
 
 exports.seed = async (knex) => {
   const locationNames = locations.map((l) => {

@@ -3,7 +3,7 @@ import bodyParser from 'body-parser'
 import moment from 'moment'
 import knexLib from 'knex'
 
-import knexConfig from '../../../knex/knexfile.js'
+import knexConfig from '../../knex/knexfile.js'
 import trim from '../../middlewares/trim'
 import {difficultyLevelsNames, locationsNames} from '../../../common/enums'
 import {dateFormat} from '../../../common/utils'

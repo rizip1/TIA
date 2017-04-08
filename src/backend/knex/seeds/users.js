@@ -1,4 +1,4 @@
-import {createUser} from '../../server/api/users/queries'
+import {createUser} from '../../api/users/queries'
 import bcrypt from 'bcrypt'
 
 exports.seed = async (knex) => {
