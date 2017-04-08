@@ -1,12 +1,15 @@
+import {createUser} from '../../server/api/users/queries'
+import bcrypt from 'bcrypt'
+
 exports.seed = async (knex) => {
 
   const args = {
-    login: 'Jon',
-    email: 'Snow',
-    passwordHash: 'ceo',
-    registerHash: 'employee',
+    login: 'John123',
+    email: 'john@gmail.com',
+    passwordHash: await bcrypt.hash('tajneheslo', 10),
+    registerHash: 'not necessary',
+    createdAt: knex.fn.now(),
   }
 
-  await knex('users').insert(args)
-
+  await createUser(knex, args)
 }
