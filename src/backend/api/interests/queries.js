@@ -18,3 +18,26 @@ const getLocationIdFromName = (trx, name) => {
     .select('id')
     .first()
 }
+
+export const getInterests = (trx, userId) => {
+  let query = trx('interests as i')
+
+  if (userId) {
+    query = query
+      .innerJoin('users as u', (join) => {
+        join.on('i.creatorId', trx.raw('?', userId))
+        .on('u.id', trx.raw('?', userId))
+      })
+  } else {
+    query = query
+      .innerJoin('users as u', (join) => {
+        join.on('i.creatorId', 'u.id')
+      })
+  }
+  query = query
+    .where('i.validTo', '>=', trx.raw('?', trx.fn.now()))
+    .whereNull('i.deletedAt')
+    .select(['u.login as creatorLogin', 'u.id as userId', 'i.*'])
+
+  return query
+}

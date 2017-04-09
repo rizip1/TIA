@@ -36,7 +36,7 @@ router.post('/login', [bodyParser.json(), trim], async (req, res) => {
     sess.email = email
     sess.userId = queryRes.id
 
-    res.status(200).json({message: 'OK'})
+    res.status(200).json({userId: queryRes.id})
   } catch (e) {
     if (e.type < 500) {
       return res.status(e.type).json({message: e.message})
@@ -55,7 +55,7 @@ router.get('/logout',
 )
 
 router.get('/checkLogin', auth, (req, res) => {
-  res.status(200).json({message: 'OK'})
+  res.status(200).json({userId: req.session.userId})
 })
 
 export default router

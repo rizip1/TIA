@@ -18,7 +18,7 @@ class CreateInterestContainer extends Component {
     createInterest(values)
       .then(() => {
         this.context.addNotification('Túra bola úspešne vytvorená')
-        history.push('/dashboard')
+        history.push('/my-interests')
       })
       .catch((err) => console.error('Error creating interest', err))
   }

@@ -9,6 +9,7 @@ import PageNotFound from './PageNotFound'
 import NavigationContainer from '../containers/NavigationContainer'
 import LogoutContainer from '../containers/LogoutContainer'
 import CreateInterestContainer from '../containers/CreateInterestContainer'
+import MyInterestsContainer from '../containers/MyInterestsContainer'
 
 class App extends Component {
 
@@ -44,6 +45,7 @@ class App extends Component {
               <Route exact path="/logout" component={LogoutContainer}/>
               <Route path="/dashboard" component={Dashboard}/>
               <Route path="/new-interest" component={CreateInterestContainer}/>
+              <Route path="/my-interests" component={MyInterestsContainer}/>
               <Route component={PageNotFound}/>
             </Switch>
           </Grid>

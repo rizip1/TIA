@@ -8,12 +8,13 @@ import trim from '../../middlewares/trim'
 import {difficultyLevelsNames, locationsNames} from '../../../common/enums'
 import {dateFormat} from '../../../common/utils'
 import {errorTypes, errorMessages} from '../../errors'
-import {createInterest} from './queries'
+import {createInterest, getInterests} from './queries'
+import auth from '../../middlewares/auth'
 
 const router = express.Router()
 const knex = knexLib(knexConfig)
 
-router.post('/', [bodyParser.json(), trim], async (req, res) => {
+router.post('/', [auth, bodyParser.json(), trim], async (req, res) => {
 
   const {minDifficulty, maxDifficulty, description, validTo, locations} = req.body
 
@@ -62,6 +63,18 @@ router.post('/', [bodyParser.json(), trim], async (req, res) => {
       console.error('Error creating user', e)
       return res.status(500).json({message: 'Server error'})
     }
+  }
+})
+
+router.get('/:id?', [auth], async (req, res) => {
+  try {
+    const userId = req.params.id || null
+    const interests = await getInterests(knex, userId)
+
+    res.status(200).json({interests})
+  } catch (e) {
+    console.error('Error creating user', e)
+    return res.status(500).json({message: 'Server error'})
   }
 })
 

@@ -19,6 +19,7 @@ function authReducer(state = {
     error: null,
     values: null,
   },
+  userId: null,
   checkedLogin: false,
   isAuthenticated: false,
 }, action) {
@@ -41,6 +42,7 @@ function authReducer(state = {
         isFetching: false,
         values: null,
       },
+      userId: action.userId,
       isAuthenticated: true,
     }
   case LOGIN_ERROR:
@@ -50,6 +52,7 @@ function authReducer(state = {
         ...state.login,
         isFetching: false,
         values: null,
+        userId: null,
       },
     }
   case CHECK_LOGIN_SUCCESS:
@@ -57,12 +60,14 @@ function authReducer(state = {
       ...state,
       isAuthenticated: true,
       checkedLogin: true,
+      userId: action.userId,
     }
   case CHECK_LOGIN_ERROR:
     return {
       ...state,
       isAuthenticated: false,
       checkedLogin: true,
+      userId: null,
     }
   case LOGOUT_SUCCESS:
     return {

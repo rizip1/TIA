@@ -19,9 +19,10 @@ const requestLogin = (values) => {
   }
 }
 
-const successLogin = () => {
+const successLogin = (userId) => {
   return {
     type: LOGIN_SUCCESS,
+    userId,
   }
 }
 
@@ -54,7 +55,7 @@ export const login = (values) => {
           dispatch(errorLogin(data.message))
           return Promise.reject({status: response.status})
         } else {
-          dispatch(successLogin())
+          dispatch(successLogin(data.userId))
         }
       })
       .catch((err) => {
@@ -64,9 +65,10 @@ export const login = (values) => {
   }
 }
 
-const successCheckLogin = () => {
+const successCheckLogin = (userId) => {
   return {
     type: CHECK_LOGIN_SUCCESS,
+    userId,
   }
 }
 
@@ -91,7 +93,7 @@ export const setLoginStatus = () => {
         if (!response.ok) {
           dispatch(errorCheckLogin(data.message))
         } else {
-          dispatch(successCheckLogin())
+          dispatch(successCheckLogin(data.userId))
         }
       })
       .catch((err) => {

@@ -11,6 +11,7 @@ export const errorMessages = {
   invalidDifficulty: 'Difficulty levels are invalid',
   invalidLocations: 'Locations are invalid',
   invalidValidTo: 'Valid to is invalid',
+  invalidId: 'Invalid user id',
   passwordMatch: 'Passwords do not match',
   existsEmail: 'Email exists',
   existsLogin: 'Login exists',
