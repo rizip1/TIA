@@ -37,7 +37,16 @@ export const getInterests = (trx, userId) => {
   query = query
     .where('i.validTo', '>=', trx.raw('?', trx.fn.now()))
     .whereNull('i.deletedAt')
-    .select(['u.login as creatorLogin', 'u.id as userId', 'i.*'])
+    .select(['u.login as creatorLogin', 'i.*'])
 
   return query
+}
+
+export const getLocationsToInterest = (trx, interestId) => {
+  return trx('interests2locations as i2l')
+    .innerJoin('locations as l', (join) => {
+      join.on('l.id', 'i2l.locationId')
+      .on('i2l.interestId', trx.raw('?', interestId))
+    })
+    .select(['l.id', 'l.name'])
 }

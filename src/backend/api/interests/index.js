@@ -8,7 +8,7 @@ import trim from '../../middlewares/trim'
 import {difficultyLevelsNames, locationsNames} from '../../../common/enums'
 import {dateFormat} from '../../../common/utils'
 import {errorTypes, errorMessages} from '../../errors'
-import {createInterest, getInterests} from './queries'
+import {createInterest, getInterests, getLocationsToInterest} from './queries'
 import auth from '../../middlewares/auth'
 
 const router = express.Router()
@@ -70,6 +70,11 @@ router.get('/:id?', [auth], async (req, res) => {
   try {
     const userId = req.params.id || null
     const interests = await getInterests(knex, userId)
+
+    for (let i = 0; i < interests.length; i++) {
+      const result = await getLocationsToInterest(knex, interests[i].id)
+      interests[i].locations = result
+    }
 
     res.status(200).json({interests})
   } catch (e) {

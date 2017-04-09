@@ -10,7 +10,6 @@ class DashboardContainer extends Component {
 
   componentWillMount() {
     this.props.getInterests()
-      .then((res) => console.log('res', res))
       .catch((err) => console.error('Could not get interests', err))
   }
 
@@ -22,6 +21,7 @@ class DashboardContainer extends Component {
 const mapStateToProps = (state) => {
   return {
     userId: state.auth.userId,
+    interests: state.interests.interests.interests,
   }
 }
 
