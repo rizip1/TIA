@@ -37,6 +37,7 @@ export const getInterests = (trx, userId) => {
   query = query
     .where('i.validTo', '>=', trx.raw('?', trx.fn.now()))
     .whereNull('i.deletedAt')
+    .orderBy('i.validTo', 'asc')
     .select(['u.login as creatorLogin', 'i.*'])
 
   return query
@@ -49,4 +50,10 @@ export const getLocationsToInterest = (trx, interestId) => {
       .on('i2l.interestId', trx.raw('?', interestId))
     })
     .select(['l.id', 'l.name'])
+}
+
+export const deleteInterest = (trx, interestId) => {
+  return trx('interests')
+    .update({deletedAt: trx.fn.now()})
+    .where('id', interestId)
 }

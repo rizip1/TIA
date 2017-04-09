@@ -6,7 +6,7 @@ import Interest from './visual/Interest'
 class Dashboard extends Component {
 
   render() {
-    const {interests, userId} = this.props
+    const {interests, userId, my, deleteInterest} = this.props
 
     if (!interests) {
       return <p>Načítavam ...</p>
@@ -18,7 +18,9 @@ class Dashboard extends Component {
           <Col md={8}>
             {interests.map((i, key) => {
               return (
-                <Interest {...i} userId={userId} key={key} />
+                <Interest {...i} userId={userId} key={key} my={my}
+                  onDelete={deleteInterest}
+                />
               )
             })}
           </Col>

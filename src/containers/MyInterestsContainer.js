@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
-import {getInterests} from '../actions/interests'
+import {getInterests, deleteInterest} from '../actions/interests'
 import MyInterests from '../components/MyInterests'
 import auth from '../components/hoc/auth'
 
@@ -22,12 +22,14 @@ class MyInterestsContainer extends Component {
 const mapStateToProps = (state) => {
   return {
     userId: state.auth.userId,
+    interests: state.interests.myInterests.interests,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({
     getInterests,
+    deleteInterest,
   }, dispatch)
 }
 

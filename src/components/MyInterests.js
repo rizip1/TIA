@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
 
+import Dashboard from './Dashboard'
+
 class MyInterests extends Component {
 
   render() {
     return (
-      <p>My interests</p>
+      <Dashboard {...this.props} my={true} />
     )
   }
 }

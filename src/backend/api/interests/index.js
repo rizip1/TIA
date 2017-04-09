@@ -8,7 +8,8 @@ import trim from '../../middlewares/trim'
 import {difficultyLevelsNames, locationsNames} from '../../../common/enums'
 import {dateFormat} from '../../../common/utils'
 import {errorTypes, errorMessages} from '../../errors'
-import {createInterest, getInterests, getLocationsToInterest} from './queries'
+import {createInterest, getInterests, getLocationsToInterest,
+  deleteInterest} from './queries'
 import auth from '../../middlewares/auth'
 
 const router = express.Router()
@@ -78,15 +79,27 @@ router.get('/:id?', [auth], async (req, res) => {
 
     res.status(200).json({interests})
   } catch (e) {
-    console.error('Error creating user', e)
+    console.error('Error getting interests', e)
     return res.status(500).json({message: 'Server error'})
   }
 })
 
-router.delete('/',
-  (req, res) => {
-    res.status(200).send('Interest deleted')
+router.delete('/:id', [auth], async (req, res) => {
+  try {
+    const interestId = req.params.id
+
+    // TODO check if user owns interest
+
+    await deleteInterest(knex, interestId)
+    res.status(200).send({message: 'OK'})
+  } catch (e) {
+    if (e.type < 500) {
+      return res.status(e.type).json({message: e.message})
+    } else {
+      console.error('Error deleting interest', e)
+      return res.status(500).json({message: 'Server error'})
+    }
   }
-)
+})
 
 export default router

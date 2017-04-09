@@ -6,6 +6,10 @@ export const GET_INTERESTS_REQUEST = 'GET_INTERESTS_REQUEST'
 export const GET_INTERESTS_SUCCESS = 'GET_INTERESTS_SUCCESS'
 export const GET_INTERESTS_ERROR = 'GET_INTERESTS_ERROR'
 
+export const DELETE_INTEREST_REQUEST = 'DELETE_INTEREST_REQUEST'
+export const DELETE_INTEREST_SUCCESS = 'DELETE_INTEREST_SUCCESS'
+export const DELETE_INTEREST_ERROR = 'DELETE_INTEREST_ERROR'
+
 const requestCreateInterest = (values) => {
   return {
     type: CREATE_INTEREST_REQUEST,
@@ -99,7 +103,6 @@ export const getInterests = (userId) => {
 
     return fetch(path, options)
       .then((response) => {
-        console.log('res', response)
         return response.json().then((data) => ({response, data}))
       })
       .then(({response, data}) => {
@@ -113,6 +116,55 @@ export const getInterests = (userId) => {
       })
       .catch((err) => {
         dispatch(errorGetInterests(err, all))
+        return Promise.reject(err)
+      })
+  }
+}
+
+const requestDeleteInterest = (interestId) => {
+  return {
+    type: DELETE_INTEREST_REQUEST,
+    interestId,
+  }
+}
+
+const successDeleteInterest = (interestId) => {
+  return {
+    type: DELETE_INTEREST_SUCCESS,
+    interestId,
+  }
+}
+
+const errorDeleteInterest = (error) => {
+  return {
+    type: DELETE_INTEREST_ERROR,
+    error,
+  }
+}
+
+export const deleteInterest = (interestId) => {
+  return dispatch => {
+    const options = {
+      method: 'delete',
+      credentials: 'include',
+    }
+
+    dispatch(requestDeleteInterest(interestId))
+
+    return fetch(`/api/interests/${interestId}`, options)
+      .then((response) => {
+        return response.json().then((data) => ({response, data}))
+      })
+      .then(({response, data}) => {
+        if (!response.ok) {
+          dispatch(errorDeleteInterest(data.message))
+          return Promise.reject(data.message)
+        } else {
+          dispatch(successDeleteInterest(interestId))
+        }
+      })
+      .catch((err) => {
+        dispatch(errorDeleteInterest(err))
         return Promise.reject(err)
       })
   }

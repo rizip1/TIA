@@ -9,9 +9,10 @@ import {dateFormat} from '../../common/utils'
 class Interest extends Component {
 
   render() {
-    console.log('creatorId', this.props.creatorId, this.props.userId)
-    const {createdAt, validTo, creatorLogin, minDifficulty,
-      creatorId, maxDifficulty, description, locations, userId} = this.props
+    const {createdAt, validTo, creatorLogin, minDifficulty, my,
+      onDelete, creatorId, maxDifficulty, description, locations,
+      userId, id} = this.props
+
     return (
       <Row className={styles.wrapper}>
         <Row>
@@ -48,13 +49,13 @@ class Interest extends Component {
         </Row>
         <Row>
           <Col md={6}>
-            {creatorId !== userId && (
+            {(creatorId !== userId && !my) && (
               <Button type="button">
                 Pripojiť sa
               </Button>
             )}
-            {creatorId === userId && (
-              <Button type="button">
+            {(creatorId === userId && my) && (
+              <Button type="button" onClick={() => onDelete(id)}>
                 Zmazať
               </Button>
             )}
