@@ -58,17 +58,19 @@ export const createInterest = (values) => {
   }
 }
 
-const requestGetInterests = (my) => {
+const requestGetInterests = (userId, all) => {
   return {
     type: GET_INTERESTS_REQUEST,
-    my,
+    userId,
+    all,
   }
 }
 
-const successGetInterests = (myInterests) => {
+const successGetInterests = (myInterests, all) => {
   return {
     type: GET_INTERESTS_SUCCESS,
-    myInterests,
+    interests: myInterests,
+    all,
   }
 }
 
@@ -81,17 +83,20 @@ const errorGetInterests = (error) => {
 
 export const getInterests = (userId) => {
   return dispatch => {
-    dispatch(requestGetInterests(userId))
-
     const options = {
       method: 'get',
       credentials: 'include',
     }
 
     let path = '/api/interests'
+    let all = true
     if (userId) {
       path += `/${userId}`
+      all = false
     }
+
+    dispatch(requestGetInterests(userId, all))
+
     return fetch(path, options)
       .then((response) => {
         console.log('res', response)
@@ -99,15 +104,15 @@ export const getInterests = (userId) => {
       })
       .then(({response, data}) => {
         if (!response.ok) {
-          dispatch(errorGetInterests(data.message))
+          dispatch(errorGetInterests(data.message, all))
           return Promise.reject({status: response.status})
         } else {
-          dispatch(successGetInterests(data.interests))
+          dispatch(successGetInterests(data.interests, all))
           return data.interests
         }
       })
       .catch((err) => {
-        dispatch(errorGetInterests(err))
+        dispatch(errorGetInterests(err, all))
         return Promise.reject(err)
       })
   }

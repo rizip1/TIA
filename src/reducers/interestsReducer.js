@@ -14,6 +14,11 @@ function interestsReducer(state = {
     isFetching: false,
     error: null,
   },
+  interests: {
+    interests: null,
+    isFetching: false,
+    error: null,
+  },
 }, action) {
   switch (action.type) {
   case CREATE_INTEREST_REQUEST:
@@ -45,33 +50,39 @@ function interestsReducer(state = {
         error: action.error,
       },
     }
-  case GET_INTERESTS_REQUEST:
+  case GET_INTERESTS_REQUEST: {
+    const path = action.all ? 'interests' : 'myInterests'
     return {
       ...state,
-      myInterests: {
-        ...state.myInterests,
+      [path]: {
+        ...state[path],
         isFetching: true,
         error: null,
       },
     }
-  case GET_INTERESTS_SUCCESS:
+  }
+  case GET_INTERESTS_SUCCESS: {
+    const path = action.all ? 'interests' : 'myInterests'
     return {
       ...state,
-      myInterests: {
-        ...state.myInterests,
+      [path]: {
+        ...state[path],
         isFetching: false,
         interests: action.interests,
       },
     }
-  case GET_INTERESTS_ERROR:
+  }
+  case GET_INTERESTS_ERROR: {
+    const path = action.all ? 'interests' : 'myInterests'
     return {
       ...state,
-      myInterests: {
-        ...state.myInterests,
+      [path]: {
+        ...state[path],
         isFetching: false,
         error: action.error,
       },
     }
+  }
   default:
     return state
   }
