@@ -8,10 +8,12 @@ import auth from '../components/hoc/auth'
 
 class MyInterestsContainer extends Component {
 
-  componentWillMount() {
-    this.props.getInterests(this.props.userId)
-      .then((res) => console.log('res', res))
-      .catch((err) => console.error('Could not get interests', err))
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userId && !nextProps.interests) {
+      this.props.getInterests(nextProps.userId)
+        .then((res) => console.log('res', res))
+        .catch((err) => console.error('Could not get interests', err))
+    }
   }
 
   render() {
