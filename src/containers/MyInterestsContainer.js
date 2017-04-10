@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 
@@ -8,16 +8,35 @@ import auth from '../components/hoc/auth'
 
 class MyInterestsContainer extends Component {
 
+  constructor(props) {
+    super(props)
+
+    this.state = {alreadyFetched: false}
+  }
+
+  componentWillMount() {
+    const {userId} = this.props
+    if (userId) {
+      this.fetchInterests(userId)
+    }
+  }
+
+  fetchInterests = (userId) => {
+    this.props.getInterests(userId)
+      .then(() => {
+        this.setState({alreadyFetched: true})
+      })
+      .catch((err) => console.error('Could not get interests', err))
+  }
+
   componentWillReceiveProps(nextProps) {
-    if (nextProps.userId && !nextProps.interests) {
-      this.props.getInterests(nextProps.userId)
-        .then((res) => console.log('res', res))
-        .catch((err) => console.error('Could not get interests', err))
+    if (nextProps.userId && !this.state.alreadyFetched) {
+      this.fetchInterests(nextProps.userId)
     }
   }
 
   render() {
-    return (<MyInterests {...this.props} />)
+    return (<MyInterests {...this.props} addNotification={this.context.addNotification} />)
   }
 }
 
@@ -33,6 +52,10 @@ const mapDispatchToProps = (dispatch) => {
     getInterests,
     deleteInterest,
   }, dispatch)
+}
+
+MyInterestsContainer.contextTypes = {
+  addNotification: PropTypes.func,
 }
 
 export default auth(connect(mapStateToProps, mapDispatchToProps)(MyInterestsContainer))

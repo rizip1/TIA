@@ -1,21 +1,20 @@
 import React, {Component} from 'react'
-import {Modal} from 'react-bootstrap'
+import {Modal, Button} from 'react-bootstrap'
 
 class ConfirmModal extends Component {
   render() {
-    const {show, onHide, onConfirm} = this.props
+    const {show, onHide, onConfirm, body, confirmText} = this.props
     return (
       <Modal show={show} onHide={onHide}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Potvrdenie</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <h4>Text in a modal</h4>
-          <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula.</p>
+          <p>{body}</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button>Close</Button>
-          <Button bsStyle="primary">Save changes</Button>
+          <Button onClick={onHide}>Zrušiť</Button>
+          <Button onClick={onConfirm} bsStyle="danger">{confirmText}</Button>
         </Modal.Footer>
       </Modal>
     )
