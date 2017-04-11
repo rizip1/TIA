@@ -1,9 +1,11 @@
-import config from '../src/backend/knex/knexfile.js'
+import config from '../src/backend/knex/knexfile'
 
 const conn = config.connection
 conn.database = 'postgres'
 
 const knex = require('knex')({ client: 'pg', connection: conn})
+
+console.log('connection', conn)
 
 knex.raw('DROP DATABASE IF EXISTS hiker')
   .then(() => {

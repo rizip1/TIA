@@ -12,8 +12,8 @@ import auth from './auth'
 dotenv.config() // initialize .env variables
 
 const app = express()
-const port = process.env.port
-const host = process.env.host
+const port = process.env.PORT
+const host = process.env.HOST
 
 const sessionOptions = {
   secret: '9awef98fefa68fWAFffeaFea656862eFAEAF95nyp',
@@ -25,6 +25,8 @@ const sessionOptions = {
     maxAge: 10080000, // one week
   },
 }
+
+console.log('AAAAAAAAAAAAAAAAAAAAAAAAA')
 
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1) // set if node is running behind proxy

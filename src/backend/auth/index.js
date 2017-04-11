@@ -7,7 +7,7 @@ import trim from '../middlewares/trim'
 import auth from '../middlewares/auth'
 import {errorTypes, errorMessages} from '../errors'
 import {getPasswordHash, getUserId} from './queries'
-import knexConfig from '../knex/knexfile.js'
+import knexConfig from '../knex/knexfile'
 
 const knex = knexLib(knexConfig)
 const router = express.Router()

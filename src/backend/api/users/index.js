@@ -10,12 +10,15 @@ import knexConfig from '../../knex/knexfile.js'
 import {errorTypes, errorMessages, conflictFields} from '../../errors'
 import trim from '../../middlewares/trim'
 import {createUser, isUniqueEmail, isUniqueLogin,
-  isRegisterHashCorrect, confirmRegistration} from './queries.js'
+  isRegisterHashCorrect, confirmRegistration} from './queries'
 import {protocol, host} from '../../utils.js'
 
 const router = express.Router()
 const knex = knexLib(knexConfig)
 const saltRounds = 10
+
+console.log('user', process.env.email_user)
+console.log('email', process.env.email_password)
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
