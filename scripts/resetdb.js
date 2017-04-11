@@ -5,8 +5,6 @@ conn.database = 'postgres'
 
 const knex = require('knex')({ client: 'pg', connection: conn})
 
-console.log('connection', conn)
-
 knex.raw('DROP DATABASE IF EXISTS hiker')
   .then(() => {
     console.log('Drop database hiker')

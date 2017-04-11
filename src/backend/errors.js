@@ -16,6 +16,9 @@ export const errorMessages = {
   existsEmail: 'Email exists',
   existsLogin: 'Login exists',
   badCreds: 'Bad credentials',
+  interestAlreadyAssigned: 'Interest already assigned',
+  interestDoesNotExist: 'Intests does not exist',
+  permisions: 'Do not have enough permissions',
 }
 
 // fields that can no be validated client side

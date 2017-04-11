@@ -9,12 +9,13 @@ import {difficultyLevelsNames, locationsNames} from '../../../common/enums'
 import {dateFormat} from '../../../common/utils'
 import {errorTypes, errorMessages} from '../../errors'
 import {createInterest, getInterests, getLocationsToInterest,
-  deleteInterest} from './queries'
+  deleteInterest, getUsersToInterest, getInterestOwner} from './queries'
 import auth from '../../middlewares/auth'
 
 const router = express.Router()
 const knex = knexLib(knexConfig)
 
+// create new interest
 router.post('/', [auth, bodyParser.json(), trim], async (req, res) => {
 
   const {minDifficulty, maxDifficulty, description, validTo, locations} = req.body
@@ -67,14 +68,18 @@ router.post('/', [auth, bodyParser.json(), trim], async (req, res) => {
   }
 })
 
-router.get('/:id?', [auth], async (req, res) => {
+// get all interests or all interest for concreate user
+router.get('/:userId?', [auth], async (req, res) => {
   try {
-    const userId = req.params.id || null
+    const userId = req.params.userId || null
     const interests = await getInterests(knex, userId)
 
     for (let i = 0; i < interests.length; i++) {
-      const result = await getLocationsToInterest(knex, interests[i].id)
+      let result = await getLocationsToInterest(knex, interests[i].id)
       interests[i].locations = result
+
+      result = await getUsersToInterest(knex, interests[i].id)
+      interests[i].users = result.map((r) => r.login)
     }
 
     res.status(200).json({interests})
@@ -84,13 +89,19 @@ router.get('/:id?', [auth], async (req, res) => {
   }
 })
 
+// delete interest with :id
 router.delete('/:id', [auth], async (req, res) => {
   try {
     const interestId = req.params.id
 
-    // TODO check if user owns interest
+    const queryResult = await getInterestOwner(knex, interestId)
+    if (queryResult.creatorId != req.session.userId) {
+      throw {type: errorTypes.forbidden, message: errorMessages.permisions}
+    }
 
-    await deleteInterest(knex, interestId)
+    await knex.transaction(async (trx) => {
+      await deleteInterest(trx, interestId)
+    })
     res.status(200).send({message: 'OK'})
   } catch (e) {
     if (e.type < 500) {

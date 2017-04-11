@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-import Dashboard from './Dashboard'
+import InterestsList from './InterestsList'
 import ConfirmModal from './visual/ConfirmModal'
 
 class MyInterests extends Component {
@@ -24,7 +24,7 @@ class MyInterests extends Component {
     const {deleteInterest, addNotification} = this.props
     return (
       <div>
-        <Dashboard {...this.props} my={true} onDelete={(id) => this.showModal(id)} />
+        <InterestsList {...this.props} my={true} onDelete={(id) => this.showModal(id)} />
         <ConfirmModal
           show={showModal}
           onHide={this.onHide}

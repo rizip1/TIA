@@ -6,7 +6,7 @@ import knexLib from 'knex'
 import trim from '../middlewares/trim'
 import auth from '../middlewares/auth'
 import {errorTypes, errorMessages} from '../errors'
-import {getPasswordHash, getUserId} from './queries'
+import {getPasswordHash, getUser} from './queries'
 import knexConfig from '../knex/knexfile'
 
 const knex = knexLib(knexConfig)
@@ -30,13 +30,14 @@ router.post('/login', [bodyParser.json(), trim], async (req, res) => {
       throw {type: errorTypes.forbidden, message: errorMessages.badCreds}
     }
 
-    const queryRes = await getUserId(knex, email)
+    const queryRes = await getUser(knex, email)
 
     const sess = req.session
     sess.email = email
     sess.userId = queryRes.id
+    sess.login = queryRes.login
 
-    res.status(200).json({userId: queryRes.id})
+    res.status(200).json({userId: queryRes.id, login: queryRes.login, email})
   } catch (e) {
     if (e.type < 500) {
       return res.status(e.type).json({message: e.message})
@@ -55,7 +56,8 @@ router.get('/logout',
 )
 
 router.get('/checkLogin', auth, (req, res) => {
-  res.status(200).json({userId: req.session.userId})
+  const {userId, login, email} = req.session
+  res.status(200).json({userId, login, email})
 })
 
 export default router

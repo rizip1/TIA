@@ -10,6 +10,10 @@ export const DELETE_INTEREST_REQUEST = 'DELETE_INTEREST_REQUEST'
 export const DELETE_INTEREST_SUCCESS = 'DELETE_INTEREST_SUCCESS'
 export const DELETE_INTEREST_ERROR = 'DELETE_INTEREST_ERROR'
 
+export const ASSIGN_INTEREST_REQUEST = 'ASSIGN_INTEREST_REQUEST'
+export const ASSIGN_INTEREST_SUCCESS = 'ASSIGN_INTEREST_SUCCESS'
+export const ASSIGN_INTEREST_ERROR = 'ASSIGN_INTEREST_ERROR'
+
 const requestCreateInterest = (values) => {
   return {
     type: CREATE_INTEREST_REQUEST,
@@ -165,6 +169,57 @@ export const deleteInterest = (interestId) => {
       })
       .catch((err) => {
         dispatch(errorDeleteInterest(err))
+        return Promise.reject(err)
+      })
+  }
+}
+
+const requestAssignInterest = (interestId) => {
+  return {
+    type: ASSIGN_INTEREST_REQUEST,
+    interestId,
+  }
+}
+
+const successAssignInterest = (interestId, login) => {
+  console.log('success', interestId, login)
+  return {
+    type: ASSIGN_INTEREST_SUCCESS,
+    interestId,
+    login,
+  }
+}
+
+const errorAssignInterest = (error) => {
+  return {
+    type: ASSIGN_INTEREST_ERROR,
+    error,
+  }
+}
+
+export const assignToInterest = (interestId) => {
+  return dispatch => {
+    const options = {
+      method: 'post',
+      credentials: 'include',
+    }
+
+    dispatch(requestAssignInterest(interestId))
+
+    return fetch(`/api/assignments/${interestId}`, options)
+      .then((response) => {
+        return response.json().then((data) => ({response, data}))
+      })
+      .then(({response, data}) => {
+        if (!response.ok) {
+          dispatch(errorAssignInterest(data.message))
+          return Promise.reject(data.message)
+        } else {
+          dispatch(successAssignInterest(interestId, data.login))
+        }
+      })
+      .catch((err) => {
+        dispatch(errorAssignInterest(err))
         return Promise.reject(err)
       })
   }

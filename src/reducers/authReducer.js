@@ -20,6 +20,8 @@ function authReducer(state = {
     values: null,
   },
   userId: null,
+  userLogin: null,
+  email: null,
   checkedLogin: false,
   isAuthenticated: false,
 }, action) {
@@ -43,6 +45,8 @@ function authReducer(state = {
         values: null,
       },
       userId: action.userId,
+      userLogin: action.login,
+      email: action.email,
       isAuthenticated: true,
     }
   case LOGIN_ERROR:
@@ -61,6 +65,8 @@ function authReducer(state = {
       isAuthenticated: true,
       checkedLogin: true,
       userId: action.userId,
+      userLogin: action.login,
+      email: action.email,
     }
   case CHECK_LOGIN_ERROR:
     return {

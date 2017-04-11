@@ -2,7 +2,19 @@ import {
   CREATE_INTEREST_REQUEST, CREATE_INTEREST_SUCCESS, CREATE_INTEREST_ERROR,
   GET_INTERESTS_REQUEST, GET_INTERESTS_SUCCESS, GET_INTERESTS_ERROR,
   DELETE_INTEREST_REQUEST, DELETE_INTEREST_SUCCESS, DELETE_INTEREST_ERROR,
+  ASSIGN_INTEREST_REQUEST, ASSIGN_INTEREST_SUCCESS, ASSIGN_INTEREST_ERROR,
 } from '../actions/interests'
+
+function addInterest(interests, interestId, login) {
+  if (!interests.interests) {
+    return interests.interests
+  }
+  return interests.interests.map((interest) => {
+    return interest.id === interestId ?
+      {...interest, users: [...interest.users, login]}
+      : interest
+  })
+}
 
 function interestsReducer(state = {
   createInterest: {
@@ -24,6 +36,11 @@ function interestsReducer(state = {
     isFetching: false,
     error: null,
     interestId: null,
+  },
+  assignInterest: {
+    interestId: null,
+    isFetching: false,
+    error: null,
   },
 }, action) {
   switch (action.type) {
@@ -120,6 +137,47 @@ function interestsReducer(state = {
       ...state,
       deleteInterests: {
         ...state.deleteInterests,
+        isFetching: false,
+        error: action.error,
+      },
+    }
+  case ASSIGN_INTEREST_REQUEST:
+    return {
+      ...state,
+      assignInterest: {
+        ...state.assignInterest,
+        isFetching: false,
+        error: null,
+        interestId: action.interestId,
+      },
+    }
+  case ASSIGN_INTEREST_SUCCESS: {
+    const allInterests = addInterest(state.interests, action.interestId, action.login)
+    const myInterests = addInterest(state.myInterests, action.interestId, action.login)
+
+    console.log('all', allInterests)
+    console.log('my', myInterests)
+    return {
+      ...state,
+      assignInterest: {
+        ...state.assignInterest,
+        isFetching: false,
+      },
+      interests: {
+        ...state.interests,
+        interests: allInterests,
+      },
+      myInterests: {
+        ...state.myInterests,
+        interests: myInterests,
+      },
+    }
+  }
+  case ASSIGN_INTEREST_ERROR:
+    return {
+      ...state,
+      assignInterest: {
+        ...state.assignInterest,
         isFetching: false,
         error: action.error,
       },

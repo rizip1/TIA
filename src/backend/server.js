@@ -26,8 +26,6 @@ const sessionOptions = {
   },
 }
 
-console.log('AAAAAAAAAAAAAAAAAAAAAAAAA')
-
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1) // set if node is running behind proxy
   sessionOptions.cookie.secure = true // serve secure cookies

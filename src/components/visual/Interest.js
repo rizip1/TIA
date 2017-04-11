@@ -11,7 +11,7 @@ class Interest extends Component {
   render() {
     const {createdAt, validTo, creatorLogin, minDifficulty, my,
       onDelete, creatorId, maxDifficulty, description, locations,
-      userId, id} = this.props
+      userId, id, assignToInterest, users, userLogin} = this.props
 
     return (
       <Row className={styles.wrapper}>
@@ -48,10 +48,23 @@ class Interest extends Component {
           </Col>
         </Row>
         <Row>
+          <Col md={12}>
+            <p><strong>Prihlásení: </strong>
+            {users.length ? users.map((u) => `${u} ,`)
+              : 'Zatiaľ nie je prihlásený žiadny užívateľ.'}
+            </p>
+          </Col>
+        </Row>
+        <Row>
           <Col md={6}>
-            {(creatorId !== userId && !my) && (
-              <Button type="button">
-                Pripojiť sa
+            {(creatorId !== userId && !users.includes(userLogin)) && (
+              <Button type="button" onClick={() => assignToInterest(id)}>
+                Pripojiť
+              </Button>
+            )}
+            {(creatorId !== userId && users.includes(userLogin)) && (
+              <Button type="button" onClick={() => console.log('odhlasujem sa')}>
+                Odpojiť
               </Button>
             )}
             {(creatorId === userId && my) && (

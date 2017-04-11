@@ -17,9 +17,6 @@ const router = express.Router()
 const knex = knexLib(knexConfig)
 const saltRounds = 10
 
-console.log('user', process.env.email_user)
-console.log('email', process.env.email_password)
-
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -135,6 +132,7 @@ router.get('/', async (req, res) => {
     const sess = req.session
     sess.email = email
     sess.userId = id
+    sess.login = login
     res.redirect(mainPage)
   } catch (e) {
     if (e.type < 500) {

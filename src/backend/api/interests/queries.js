@@ -52,8 +52,32 @@ export const getLocationsToInterest = (trx, interestId) => {
     .select(['l.id', 'l.name'])
 }
 
-export const deleteInterest = (trx, interestId) => {
-  return trx('interests')
+export const getUsersToInterest = (trx, interestId) => {
+  return trx('interests2users as i2u')
+    .innerJoin('users as u', (join) => {
+      join.on('u.id', 'i2u.userId')
+      .on('i2u.interestId', trx.raw('?', interestId))
+    })
+    .select('u.login')
+}
+
+export const deleteInterest = async (trx, interestId) => {
+  await trx('interests')
     .update({deletedAt: trx.fn.now()})
     .where('id', interestId)
+
+  await trx('interests2locations')
+    .where('interestId', interestId)
+    .del()
+
+  return trx('interests2users')
+    .where('interestId', interestId)
+    .del()
+}
+
+export const getInterestOwner = (trx, interestId) => {
+  return trx('interests')
+    .where('id', interestId)
+    .select('creatorId')
+    .first()
 }
