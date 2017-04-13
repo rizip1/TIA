@@ -63,7 +63,7 @@ class CreateInterestForm extends Component {
     return (
       <Row>
         <Col md={6} mdOffset={3} className={styles.formBody}>
-          <h2>Nová túra</h2>
+          <h2 className={styles.header}>Nová túra</h2>
           <form onSubmit={handleSubmit(handleSubmitCustom)}>
             <Field
               name="validTo"

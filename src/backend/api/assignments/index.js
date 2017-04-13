@@ -4,7 +4,8 @@ import knexLib from 'knex'
 import knexConfig from '../../knex/knexfile.js'
 import {errorTypes, errorMessages} from '../../errors'
 import auth from '../../middlewares/auth'
-import {assignToInterest, findInterest, isAssignedToInterest} from './queries'
+import {assignToInterest, findInterest, isAssignedToInterest,
+  unAssignFromInterest} from './queries'
 
 const router = express.Router()
 const knex = knexLib(knexConfig)
@@ -33,6 +34,24 @@ router.post('/:id', [auth], async (req, res) => {
 
     await assignToInterest(knex, interestId, userId)
     res.status(201).send({message: 'Created', login: req.session.login})
+  } catch (e) {
+    if (e.type < 500) {
+      return res.status(e.type).json({message: e.message})
+    } else {
+      console.error('Error creating user', e)
+      return res.status(500).json({message: 'Server error'})
+    }
+  }
+})
+
+// unassign from interest
+router.delete('/:id', [auth], async (req, res) => {
+  try {
+    const interestId = req.params.id
+    const {userId} = req.session
+
+    await unAssignFromInterest(knex, interestId, userId)
+    res.status(200).send({message: 'OK', login: req.session.login})
   } catch (e) {
     if (e.type < 500) {
       return res.status(e.type).json({message: e.message})

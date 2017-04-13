@@ -8,8 +8,8 @@ class PageNotFound extends Component {
   render() {
     return (
       <Jumbotron className={styles.jumbo}>
-        <h1>Ouups!</h1>
-        <p>Hľadaný cieľ neexistuje</p>
+        <h1 className={styles.text}>Ouups!</h1>
+        <p className={styles.text}>Hľadaný cieľ neexistuje</p>
       </Jumbotron>
     )
   }

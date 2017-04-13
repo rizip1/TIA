@@ -14,6 +14,10 @@ export const ASSIGN_INTEREST_REQUEST = 'ASSIGN_INTEREST_REQUEST'
 export const ASSIGN_INTEREST_SUCCESS = 'ASSIGN_INTEREST_SUCCESS'
 export const ASSIGN_INTEREST_ERROR = 'ASSIGN_INTEREST_ERROR'
 
+export const UNASSIGN_INTEREST_REQUEST = 'UNASSIGN_INTEREST_REQUEST'
+export const UNASSIGN_INTEREST_SUCCESS = 'UNASSIGN_INTEREST_SUCCESS'
+export const UNASSIGN_INTEREST_ERROR = 'UNASSIGN_INTEREST_ERROR'
+
 const requestCreateInterest = (values) => {
   return {
     type: CREATE_INTEREST_REQUEST,
@@ -178,15 +182,16 @@ const requestAssignInterest = (interestId) => {
   return {
     type: ASSIGN_INTEREST_REQUEST,
     interestId,
+    assign: true,
   }
 }
 
 const successAssignInterest = (interestId, login) => {
-  console.log('success', interestId, login)
   return {
     type: ASSIGN_INTEREST_SUCCESS,
     interestId,
     login,
+    assign: true,
   }
 }
 
@@ -194,6 +199,7 @@ const errorAssignInterest = (error) => {
   return {
     type: ASSIGN_INTEREST_ERROR,
     error,
+    assign: true,
   }
 }
 
@@ -220,6 +226,57 @@ export const assignToInterest = (interestId) => {
       })
       .catch((err) => {
         dispatch(errorAssignInterest(err))
+        return Promise.reject(err)
+      })
+  }
+}
+
+const requestUnassignInterest = (interestId) => {
+  return {
+    type: UNASSIGN_INTEREST_REQUEST,
+    interestId,
+  }
+}
+
+const successUnassignInterest = (interestId, login) => {
+  return {
+    type: UNASSIGN_INTEREST_SUCCESS,
+    interestId,
+    login,
+  }
+}
+
+const errorUnassignInterest = (error) => {
+  return {
+    type: UNASSIGN_INTEREST_ERROR,
+    error,
+  }
+}
+
+export const unassignFromInterest = (interestId) => {
+  return dispatch => {
+    const options = {
+      method: 'delete',
+      credentials: 'include',
+    }
+
+    dispatch(requestUnassignInterest(interestId))
+
+    return fetch(`/api/assignments/${interestId}`, options)
+      .then((response) => {
+        return response.json().then((data) => ({response, data}))
+      })
+      .then(({response, data}) => {
+        if (!response.ok) {
+          dispatch(errorUnassignInterest(data.message))
+          return Promise.reject(data.message)
+        } else {
+          console.log('data', data)
+          dispatch(successUnassignInterest(interestId, data.login))
+        }
+      })
+      .catch((err) => {
+        dispatch(errorUnassignInterest(err))
         return Promise.reject(err)
       })
   }

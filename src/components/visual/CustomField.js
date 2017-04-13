@@ -142,7 +142,7 @@ export default class CustomField extends Component {
     return (
       <FormGroup validationState={this.getValidationState()}>
         <ControlLabel>
-          {label} {note && <Label bsStyle="info">{note}</Label>}
+          {label} {note && <Label>{note}</Label>}
         </ControlLabel>
         {this.renderComponent()}
         {(showValidation && touched && error) && <HelpBlock>{error}</HelpBlock>}

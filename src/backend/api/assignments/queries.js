@@ -13,3 +13,10 @@ export const isAssignedToInterest = (trx, interestId, userId) => {
     .where('userId', userId)
     .where('interestId', interestId)
 }
+
+export const unAssignFromInterest = (trx, interestId, userId) => {
+  return trx('interests2users')
+    .where('userId', userId)
+    .where('interestId', interestId)
+    .del()
+}

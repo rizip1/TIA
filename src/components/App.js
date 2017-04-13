@@ -13,6 +13,10 @@ import MyInterestsContainer from '../containers/MyInterestsContainer'
 
 class App extends Component {
 
+  static childContextTypes = {
+    addNotification: PropTypes.func,
+  }
+
   constructor(props) {
     super(props)
     this.notificationSystem = null
@@ -54,10 +58,6 @@ class App extends Component {
       </Router>
     )
   }
-}
-
-App.childContextTypes = {
-  addNotification: PropTypes.func,
 }
 
 export default App

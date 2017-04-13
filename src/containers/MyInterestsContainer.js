@@ -8,6 +8,10 @@ import auth from '../components/hoc/auth'
 
 class MyInterestsContainer extends Component {
 
+  static contextTypes = {
+    addNotification: PropTypes.func,
+  }
+
   constructor(props) {
     super(props)
 
@@ -43,7 +47,7 @@ class MyInterestsContainer extends Component {
 const mapStateToProps = (state) => {
   return {
     userId: state.auth.userId,
-    interests: state.interests.myInterests.interests,
+    interests: state.interests.myInterests.data,
   }
 }
 
@@ -52,10 +56,6 @@ const mapDispatchToProps = (dispatch) => {
     getInterests,
     deleteInterest,
   }, dispatch)
-}
-
-MyInterestsContainer.contextTypes = {
-  addNotification: PropTypes.func,
 }
 
 export default auth(connect(mapStateToProps, mapDispatchToProps)(MyInterestsContainer))

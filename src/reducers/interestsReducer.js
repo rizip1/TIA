@@ -3,13 +3,32 @@ import {
   GET_INTERESTS_REQUEST, GET_INTERESTS_SUCCESS, GET_INTERESTS_ERROR,
   DELETE_INTEREST_REQUEST, DELETE_INTEREST_SUCCESS, DELETE_INTEREST_ERROR,
   ASSIGN_INTEREST_REQUEST, ASSIGN_INTEREST_SUCCESS, ASSIGN_INTEREST_ERROR,
+  UNASSIGN_INTEREST_REQUEST, UNASSIGN_INTEREST_SUCCESS, UNASSIGN_INTEREST_ERROR,
 } from '../actions/interests'
 
-function addInterest(interests, interestId, login) {
-  if (!interests.interests) {
-    return interests.interests
+const ASSIGN = 'ASSIGN'
+const UNASSIGN = 'UNASSIGN'
+
+function unassignFromInterest(interests, interestId, login) {
+  if (!interests.data) {
+    return interests.data
   }
-  return interests.interests.map((interest) => {
+  return interests.data.map((interest) => {
+    if (interest.id !== interestId) {
+      return interest
+    } else {
+      const loginIndex = interest.users.indexOf(login)
+      return {...interest, users: [...interest.users.slice(0, loginIndex),
+        ...interest.users.slice(loginIndex + 1)]}
+    }
+  })
+}
+
+function assignToInterest(interests, interestId, login) {
+  if (!interests.data) {
+    return interests.data
+  }
+  return interests.data.map((interest) => {
     return interest.id === interestId ?
       {...interest, users: [...interest.users, login]}
       : interest
@@ -23,12 +42,12 @@ function interestsReducer(state = {
     values: null,
   },
   myInterests: {
-    interests: null,
+    data: null,
     isFetching: false,
     error: null,
   },
-  interests: {
-    interests: null,
+  allInterests: {
+    data: null,
     isFetching: false,
     error: null,
   },
@@ -37,10 +56,11 @@ function interestsReducer(state = {
     error: null,
     interestId: null,
   },
-  assignInterest: {
+  assignAction: {
     interestId: null,
     isFetching: false,
     error: null,
+    actionType: null,
   },
 }, action) {
   switch (action.type) {
@@ -74,7 +94,7 @@ function interestsReducer(state = {
       },
     }
   case GET_INTERESTS_REQUEST: {
-    const path = action.all ? 'interests' : 'myInterests'
+    const path = action.all ? 'allInterests' : 'myInterests'
     return {
       ...state,
       [path]: {
@@ -85,18 +105,18 @@ function interestsReducer(state = {
     }
   }
   case GET_INTERESTS_SUCCESS: {
-    const path = action.all ? 'interests' : 'myInterests'
+    const path = action.all ? 'allInterests' : 'myInterests'
     return {
       ...state,
       [path]: {
         ...state[path],
         isFetching: false,
-        interests: action.interests,
+        data: action.interests,
       },
     }
   }
   case GET_INTERESTS_ERROR: {
-    const path = action.all ? 'interests' : 'myInterests'
+    const path = action.all ? 'allInterests' : 'myInterests'
     return {
       ...state,
       [path]: {
@@ -117,7 +137,7 @@ function interestsReducer(state = {
       },
     }
   case DELETE_INTEREST_SUCCESS: {
-    const newMyInterests = state.myInterests.interests.filter((interest) => {
+    const newMyInterests = state.myInterests.data.filter((interest) => {
       return interest.id !== action.interestId
     })
     return {
@@ -128,7 +148,7 @@ function interestsReducer(state = {
       },
       myInterests: {
         ...state.myInterests,
-        interests: newMyInterests,
+        data: newMyInterests,
       },
     }
   }
@@ -142,44 +162,44 @@ function interestsReducer(state = {
       },
     }
   case ASSIGN_INTEREST_REQUEST:
+  case UNASSIGN_INTEREST_REQUEST:
     return {
       ...state,
-      assignInterest: {
-        ...state.assignInterest,
+      assignAction: {
+        ...state.assignAction,
         isFetching: false,
         error: null,
         interestId: action.interestId,
+        actionType: action.assign ? ASSIGN : UNASSIGN,
       },
     }
-  case ASSIGN_INTEREST_SUCCESS: {
-    const allInterests = addInterest(state.interests, action.interestId, action.login)
-    const myInterests = addInterest(state.myInterests, action.interestId, action.login)
+  case ASSIGN_INTEREST_SUCCESS:
+  case UNASSIGN_INTEREST_SUCCESS: {
+    const transform = action.assign ? assignToInterest : unassignFromInterest
+    const data = transform(state.allInterests, action.interestId, action.login)
 
-    console.log('all', allInterests)
-    console.log('my', myInterests)
     return {
       ...state,
-      assignInterest: {
-        ...state.assignInterest,
+      assignAction: {
+        ...state.assignAction,
         isFetching: false,
+        actionType: action.assign ? ASSIGN : UNASSIGN,
       },
-      interests: {
-        ...state.interests,
-        interests: allInterests,
-      },
-      myInterests: {
-        ...state.myInterests,
-        interests: myInterests,
+      allInterests: {
+        ...state.allInterests,
+        data,
       },
     }
   }
   case ASSIGN_INTEREST_ERROR:
+  case UNASSIGN_INTEREST_ERROR:
     return {
       ...state,
-      assignInterest: {
-        ...state.assignInterest,
+      assignAction: {
+        ...state.assignAction,
         isFetching: false,
         error: action.error,
+        actionType: action.assign ? ASSIGN : UNASSIGN,
       },
     }
   default:

@@ -13,6 +13,10 @@ import auth from '../components/hoc/auth'
 
 class CreateInterestContainer extends Component {
 
+  static contextTypes = {
+    addNotification: PropTypes.func,
+  }
+
   handleSubmit = (values) => {
     const {createInterest, history} = this.props
     createInterest(values)
@@ -39,10 +43,6 @@ class CreateInterestContainer extends Component {
       />
     )
   }
-}
-
-CreateInterestContainer.contextTypes = {
-  addNotification: PropTypes.func,
 }
 
 const mapDispatchToProps = (dispatch) => {

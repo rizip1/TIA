@@ -15,7 +15,7 @@ class MainPage extends Component {
         <Row>
           <Col md={6}>
             <Jumbotron className={styles.jumbo}>
-              <h1>Hiker</h1>
+              <h1 className={styles.header}>Hiker</h1>
               <p>Rád chodíš na hory no nemáš s kým?</p>
               <p>Je tažké zladiť turistiku medzi viacerými ľuďmi?</p>
               <p><strong>Hiker</strong> ti pomôže nájsť ľudí s podobnými cieľmi ako ty,
