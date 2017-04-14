@@ -5,6 +5,7 @@ import knexLib from 'knex'
 import bcrypt from 'bcrypt'
 import nodemailer from 'nodemailer'
 import {createHash} from 'crypto'
+import mg from 'nodemailer-mailgun-transport'
 
 import knexConfig from '../../knex/knexfile.js'
 import {errorTypes, errorMessages, conflictFields} from '../../errors'
@@ -17,17 +18,30 @@ const router = express.Router()
 const knex = knexLib(knexConfig)
 const saltRounds = 10
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.email_user,
-    pass: process.env.email_password,
-  },
-})
+
+let transporter = null
+
+if (process.env.NODE_ENV === 'production') {
+  const mailConfig = {
+    auth: {
+      api_key: process.env.MAILGUN_API_KEY,
+      domain: process.env.MAILGUN_DOMAIN,
+    },
+  }
+  transporter = nodemailer.createTransport(mg(mailConfig))
+} else {
+  transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.email_user,
+      pass: process.env.email_password,
+    },
+  })
+}
 
 const getConfirmMailOptions = (email, login, link) => {
   return {
-    from: 'Hiker',
+    from: process.env.NODE_ENV === 'production' ? 'hiker@hiker-tia.herokuapp.com' : 'Hiker',
     to: email,
     subject: 'Hiker registrácia',
     html : 'Ďakujeme za registráciu <strong>' + login + '</strong>!<br> \

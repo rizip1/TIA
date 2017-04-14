@@ -7,6 +7,7 @@ export const createUser = async (trx, userData) => {
 export const isUniqueEmail = async (trx, email) => {
   const result = await trx('users')
     .where('email', email)
+    .whereNotNull('createdAt')
     .whereNull('deletedAt')
   return !result.length
 }
@@ -14,6 +15,7 @@ export const isUniqueEmail = async (trx, email) => {
 export const isUniqueLogin = async (trx, login) => {
   const result = await trx('users')
     .where('login', login)
+    .whereNotNull('createdAt')
     .whereNull('deletedAt')
   return !result.length
 }
