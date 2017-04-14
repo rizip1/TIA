@@ -14,8 +14,14 @@ class AppContainer extends Component {
 
   render() {
     return (
-      <App />
+      <App {...this.props} />
     )
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
   }
 }
 
@@ -25,4 +31,4 @@ const mapDispatchToProps = (dispatch) => {
   }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(AppContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(AppContainer)

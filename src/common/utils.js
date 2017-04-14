@@ -3,3 +3,4 @@ export function enumToNamesArray(enumType) {
 }
 
 export const dateFormat = 'YYYY-MM-DD'
+export const dateFormatHuman = 'D. MMM YYYY'

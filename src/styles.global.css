@@ -1,18 +1,6 @@
-body {
-  background: #F2F8F4;
-}
-
 /*
   React-bootstrap classes
 */
-.has-error > * {
-  border-color: #990000 !important;
-}
-
 .has-error > .help-block {
-  color: #990000 !important;
-}
-
-.form-group .control-label {
-  color: #333 !important;
+  color: #E9063F !important;
 }

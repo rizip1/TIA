@@ -5,6 +5,7 @@ import {reduxForm, Field} from 'redux-form'
 
 import FormSubmitFeedback from './visual/FormSubmitFeedback'
 import CustomField from './visual/CustomField'
+import styles from './RegistrationForm.scss'
 
 function validate(formProps) {
   const errors = {}
@@ -56,7 +57,7 @@ class RegistrationForm extends Component {
       submitFailed, error} = this.props
 
     return (
-      <div>
+      <div className={styles.text}>
         <p>Ešte nemáš účet? Tak neváhaj a <strong>registruj sa.</strong></p>
         <form onSubmit={handleSubmit}>
           <Field

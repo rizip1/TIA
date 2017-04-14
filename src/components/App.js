@@ -26,7 +26,7 @@ class App extends Component {
     this.notificationSystem = this.refs.notificationSystem
   }
 
-  addNotification = (message, level = 'success') => {
+  addNotification = (message, level = 'info') => {
     this.notificationSystem.addNotification({
       message,
       level,
@@ -39,6 +39,19 @@ class App extends Component {
   }
 
   render() {
+
+    const {isAuthenticated} = this.props
+
+    if (isAuthenticated) {
+      document.body.style.background = 'none'
+      document.body.style.backgroundColor = '#F2F8F4'
+    } else {
+      document.body.style.background = 'none'
+      document.body.style.backgroundImage = 'url("/public/background.jpg")'
+      document.body.style.backgroundRepeat = 'no-repeat'
+      document.body.style.backgroundSize = 'cover'
+    }
+
     return (
       <Router>
         <div>

@@ -4,7 +4,7 @@ import moment from 'moment'
 
 import {locations as locationsEnums} from '../../common/enums'
 import styles from './Interest.scss'
-import {dateFormat} from '../../common/utils'
+import {dateFormatHuman} from '../../common/utils'
 
 
 class Interest extends Component {
@@ -14,10 +14,10 @@ class Interest extends Component {
     return (
       <Row>
         <Col md={6}>
-          <strong>{creatorLogin}: </strong>{moment(createdAt).format(dateFormat)}
+          <strong>{creatorLogin}: </strong>{moment(createdAt).format(dateFormatHuman)}
         </Col>
         <Col md={6} className={styles.validTo}>
-          Platí do: <strong>{moment(validTo).format(dateFormat)}</strong>
+          Platí do: <strong>{moment(validTo).format(dateFormatHuman)}</strong>
         </Col>
     </Row>
     )
@@ -61,10 +61,10 @@ class Interest extends Component {
         <Row>
           <Col md={12}>
             <p><Badge className={styles.difficulty}>{minDifficulty}/{maxDifficulty}</Badge>
-              {locations.map((l) => {
+              {locations.map((l, key) => {
                 const item = locationsEnums.find((item) => item.name === l.name)
                 return (
-                  <Label className={styles.location} bsStyle="default">
+                  <Label key={key} className={styles.location} bsStyle="default">
                     {item.label}
                   </Label>
                 )

@@ -4,6 +4,7 @@ import {reduxForm, Field} from 'redux-form'
 
 import FormSubmitFeedback from './visual/FormSubmitFeedback'
 import CustomField from './visual/CustomField'
+import styles from './LoginForm.scss'
 
 function validate(formProps) {
   const errors = {}
@@ -37,7 +38,7 @@ class LoginForm extends Component {
       submitFailed, error} = this.props
 
     return (
-      <div>
+      <div className={styles.text}>
         <p><strong>Prihlásenie</strong></p>
       <Form inline onSubmit={handleSubmit}>
         <Field
