@@ -20,7 +20,8 @@ const getLocationIdFromName = (trx, name) => {
 }
 
 export const getInterests = (trx, userId) => {
-  let query = trx('interests as i')
+  let query = trx.select(['u.login as creatorLogin', 'i.*'])
+    .from('interests as i')
 
   if (userId) {
     query = query
@@ -34,11 +35,25 @@ export const getInterests = (trx, userId) => {
         join.on('i.creatorId', 'u.id')
       })
   }
+
+  if (userId) {
+    query = query.union(function() {
+      this.select(['u.login as creatorLogin', 'i.*'])
+        .from('interests as i')
+        .innerJoin('interests2users as i2u', (join) => {
+          join.on('i2u.userId', trx.raw('?', userId))
+          .on('i2u.interestId', 'i.id')
+        })
+        .innerJoin('users as u', (join) => {
+          join.on('i.creatorId', 'u.id')
+        })
+    }, true)
+  }
+
   query = query
     .where('i.validTo', '>=', trx.raw('?', trx.fn.now()))
     .whereNull('i.deletedAt')
-    .orderBy('i.validTo', 'asc')
-    .select(['u.login as creatorLogin', 'i.*'])
+    .orderBy('createdAt', 'desc')
 
   return query
 }

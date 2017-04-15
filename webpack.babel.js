@@ -33,8 +33,6 @@ export default function makeConfig(isDevelopment=false) {
             // when turned on, it sometimes leads to strange errors
             cacheDirectory: false,
             presets: ['es2015', 'react', 'stage-0'].concat(isDevelopment ? ['react-hmre'] : []),
-            // add babel plugins here if required
-            // plugins: ['transform-decorators-legacy'],
           },
         },
         {
@@ -45,14 +43,6 @@ export default function makeConfig(isDevelopment=false) {
           test: /\.css$/,
           loader: 'style-loader!css-loader',
         },
-        /*{
-          test: /\.png$/,
-          loader: 'url-loader?limit=100000',
-        },
-        {
-          test: /\.jpg$/,
-          loader: 'file-loader',
-        },*/
         {
           test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
           loader: 'url-loader?limit=10000&mimetype=application/font-woff',
@@ -65,10 +55,6 @@ export default function makeConfig(isDevelopment=false) {
           test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
           loader: 'file-loader',
         },
-        /*{
-          test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-          loader: 'url?limit=10000&mimetype=image/svg+xml',
-        },*/
         {
           test: /\.json?$/,
           loader: 'json-loader',

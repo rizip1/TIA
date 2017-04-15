@@ -16,7 +16,7 @@
     "clean:bundles:": "rm -rf public/bundles/*",
     "dev": "run-s clean:bundles dev:server",
     "dev:server": "babel-watch ./src/backend/server.js",
-    "heroku-postbuild": "NODE_ENV=production run-s build run:migrations",
+    "heroku-postbuild": "NODE_ENV=production run-s build run:migrations run:seeds",
     "lint": "./node_modules/.bin/eslint .",
     "sort": "npm-sort",
     "start": "NODE_ENV=production node ./dist/backend/server.js",

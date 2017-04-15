@@ -10,9 +10,6 @@ const ASSIGN = 'ASSIGN'
 const UNASSIGN = 'UNASSIGN'
 
 function unassignFromInterest(interests, interestId, login) {
-  if (!interests.data) {
-    return interests.data
-  }
   return interests.data.map((interest) => {
     if (interest.id !== interestId) {
       return interest
@@ -25,9 +22,6 @@ function unassignFromInterest(interests, interestId, login) {
 }
 
 function assignToInterest(interests, interestId, login) {
-  if (!interests.data) {
-    return interests.data
-  }
   return interests.data.map((interest) => {
     return interest.id === interestId ?
       {...interest, users: [...interest.users, login]}
@@ -175,8 +169,8 @@ function interestsReducer(state = {
     }
   case ASSIGN_INTEREST_SUCCESS:
   case UNASSIGN_INTEREST_SUCCESS: {
-    const transform = action.assign ? assignToInterest : unassignFromInterest
-    const data = transform(state.allInterests, action.interestId, action.login)
+    const getAllInterests = action.assign ? assignToInterest : unassignFromInterest
+    const allInterestsData = getAllInterests(state.allInterests, action.interestId, action.login)
 
     return {
       ...state,
@@ -187,7 +181,7 @@ function interestsReducer(state = {
       },
       allInterests: {
         ...state.allInterests,
-        data,
+        data: allInterestsData,
       },
     }
   }

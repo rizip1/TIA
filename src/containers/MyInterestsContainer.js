@@ -48,6 +48,7 @@ const mapStateToProps = (state) => {
   return {
     userId: state.auth.userId,
     interests: state.interests.myInterests.data,
+    userLogin: state.auth.userLogin,
   }
 }
 

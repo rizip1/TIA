@@ -26,6 +26,7 @@ class Interest extends Component {
   getPanelFooter = () => {
     const {creatorId, userId, users, id, userLogin, assignToInterest,
       unassignFromInterest, onDelete, my} = this.props
+
     return (
       <Row>
         <Col smPush={10} sm={2}>
@@ -34,7 +35,7 @@ class Interest extends Component {
               Pridať sa
             </Button>
           )}
-          {(creatorId !== userId && users.includes(userLogin)) && (
+          {(creatorId !== userId && users.includes(userLogin) && my) && (
             <Button bsStyle="danger" type="button" onClick={() => unassignFromInterest(id)}>
               Opustiť
             </Button>
